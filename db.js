@@ -117,32 +117,47 @@ const DB = (() => {
     }
   }
 
-  async function startParticipant(pin, name, role, language) {
+  // Issue 9: added market parameter
+  async function startParticipant(pin, name, role, language, market) {
     return request('POST', 'participants', '', {
-      pin, name, role, language,
+      pin, name, role, language, market: market || '',
       started_at: new Date().toISOString(),
       status: 'started',
       transcript: [],
     });
   }
 
-  async function saveTranscript(pin, name, transcript) {
-    // Find the started participant record
-    const rows = await request('GET', 'participants',
-      `?pin=eq.${pin}&name=eq.${encodeURIComponent(name)}&status=eq.started&order=started_at.desc&limit=1`);
-    if (!rows.length) throw new Error('Participant record not found');
-    const id = rows[0].id;
-
-    // Update transcript and mark completed
+  // Issue 9+14: accept participantId to avoid re-lookup
+  async function saveTranscript(pin, name, transcript, participantId) {
+    let id = participantId;
+    if (!id) {
+      const rows = await request('GET', 'participants',
+        `?pin=eq.${pin}&name=eq.${encodeURIComponent(name)}&status=eq.started&order=started_at.desc&limit=1`);
+      if (!rows.length) throw new Error('Participant record not found');
+      id = rows[0].id;
+    }
     await request('PATCH', 'participants', `?id=eq.${id}`, {
       transcript,
       status: 'completed',
       completed_at: new Date().toISOString(),
     });
-
-    // Increment response count on session
     const session = await getSession(pin);
     await updateSession(pin, { response_count: (session.response_count || 0) + 1 });
+  }
+
+  // Issue 14: save star rating + open text comment
+  async function saveFeedback(pin, name, rating, comment, participantId) {
+    let id = participantId;
+    if (!id) {
+      const rows = await request('GET', 'participants',
+        `?pin=eq.${pin}&name=eq.${encodeURIComponent(name)}&order=started_at.desc&limit=1`);
+      if (!rows.length) return;
+      id = rows[0].id;
+    }
+    await request('PATCH', 'participants', `?id=eq.${id}`, {
+      experience_rating: rating,
+      experience_comment: comment,
+    });
   }
 
   async function getTranscripts(pin) {
@@ -213,6 +228,6 @@ const DB = (() => {
   return {
     getSessions, getSession, createSession, updateSession, deleteSession,
     addCoAdmin, removeCoAdmin, validatePin, startParticipant, saveTranscript,
-    getTranscripts, uploadFile, saveSummary, exportSession, generatePin,
+    getTranscripts, uploadFile, saveSummary, exportSession, generatePin, saveFeedback,
   };
 })();
