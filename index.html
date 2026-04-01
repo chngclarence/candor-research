@@ -5,6 +5,7 @@
 <title>Candor Research</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="config.js"></script>
+<script src="auth.js"></script>
 <script src="db.js"></script>
 <script src="smart.js"></script>
 <style>
@@ -229,6 +230,30 @@ tbody tr:hover .row-acts{opacity:1;}
 </style>
 </head>
 <body>
+<!-- LOGIN SCREEN -->
+<div id="login-screen" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:1000;display:flex;align-items:center;justify-content:center;">
+  <div style="background:var(--sf);border:1px solid var(--border);border-radius:20px;padding:48px 40px;max-width:400px;width:100%;text-align:center;box-shadow:0 12px 48px rgba(0,0,0,0.08);">
+    <div style="font-family:'Fraunces',serif;font-size:28px;font-weight:300;letter-spacing:-0.5px;margin-bottom:6px;">Candor <em style="font-style:italic;color:var(--accent)">Research</em></div>
+    <div style="font-size:13px;color:var(--ink3);margin-bottom:32px;">AI-powered UX research interviews</div>
+    <button id="google-signin-btn" onclick="handleSignIn()" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:12px 20px;background:var(--sf);border:1.5px solid var(--border);border-radius:10px;font-family:'Instrument Sans',sans-serif;font-size:14px;font-weight:500;color:var(--ink);cursor:pointer;transition:all 0.2s;margin-bottom:12px;">
+      <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+      Sign in with Google
+    </button>
+    <div style="font-size:11px;color:var(--ink3);line-height:1.6;">Only <strong>@shopee.com</strong> and <strong>@spxexpress.com</strong> accounts are allowed.</div>
+    <div id="login-error" style="display:none;margin-top:12px;padding:10px 14px;background:var(--red-dim);border:1px solid var(--red);border-radius:8px;font-size:12px;color:var(--red)"></div>
+  </div>
+</div>
+
+<!-- ACCESS DENIED SCREEN -->
+<div id="denied-screen" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:1000;align-items:center;justify-content:center;">
+  <div style="background:var(--sf);border:1px solid var(--border);border-radius:20px;padding:48px 40px;max-width:400px;width:100%;text-align:center;box-shadow:0 12px 48px rgba(0,0,0,0.08);">
+    <div style="font-size:40px;margin-bottom:16px;">🔒</div>
+    <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:300;margin-bottom:8px;">Access Restricted</div>
+    <div style="font-size:13px;color:var(--ink2);line-height:1.6;margin-bottom:24px;">This tool is only available to Shopee / SPX Express team members.<br><br>You signed in as <strong id="denied-email"></strong>.<br><br>Please use your <strong>@shopee.com</strong> or <strong>@spxexpress.com</strong> account.</div>
+    <button onclick="AUTH.signOut()" style="padding:10px 20px;background:var(--accent);color:white;border:none;border-radius:9px;font-family:'Instrument Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">Sign out & try again</button>
+  </div>
+</div>
+
 <nav>
   <div class="logo">Candor <em>Research</em></div>
   <div class="nav-tabs">
@@ -243,6 +268,7 @@ tbody tr:hover .row-acts{opacity:1;}
     <div class="user-chip">
       <div class="user-av" id="user-av">?</div>
       <span id="user-email">loading…</span>
+      <button onclick="AUTH.signOut()" style="border:none;background:none;color:var(--ink3);cursor:pointer;font-size:11px;margin-left:4px;padding:0;" title="Sign out">↩</button>
     </div>
   </div>
 </nav>
@@ -287,7 +313,6 @@ tbody tr:hover .row-acts{opacity:1;}
         <div class="field"><label>Research goal *</label><textarea id="f-goal" placeholder="What do you need to learn? Be specific."></textarea></div>
         <div class="field"><label>User persona</label><input id="f-persona" placeholder="e.g. Ops supervisor, 1–3 yrs experience, uses dashboard daily"></div>
         <div class="field"><label>Your name / session owner</label><input id="f-creator" placeholder="e.g. Clarence Chng"></div>
-        <div class="field"><label>Your email</label><input id="f-email" type="email" placeholder="e.g. clarence.chng@shopee.com"></div>
       </div>
       <div class="fsec">
         <div class="fsec-title">Interview Settings</div>
@@ -458,18 +483,61 @@ let uploadedFiles = [], selectedFocus = ['First impressions','Pain points'];
 let clarificationHistory = [], clarThreadId = null, interviewPrompt = '', publishedPin = null, emailList = [];
 let previewHistory = [], previewThreadId = null;
 
+// ── Auth ──────────────────────────────────────────────────────
+async function handleSignIn() {
+  const btn = document.getElementById('google-signin-btn');
+  btn.textContent = 'Signing in…'; btn.disabled = true;
+  try { await AUTH.signInWithGoogle(); }
+  catch(e) {
+    btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg> Sign in with Google`;
+    btn.disabled = false;
+    document.getElementById('login-error').textContent = e.message;
+    document.getElementById('login-error').style.display = 'block';
+  }
+}
+
 // ── Init ──────────────────────────────────────────────────────
 window.onload = async () => {
-  initFocusTags(); initUploads(); initPreviewSync();
-  // Get user email from input or localStorage
-  currentUserEmail = localStorage.getItem('candor_user_email') || '';
-  if (currentUserEmail) {
-    document.getElementById('user-email').textContent = currentUserEmail;
-    document.getElementById('user-av').textContent = currentUserEmail[0].toUpperCase();
-    document.getElementById('f-email').value = currentUserEmail;
+  // Show login screen while checking auth
+  document.getElementById('login-screen').style.display = 'flex';
+  document.querySelector('nav').style.display = 'none';
+  document.querySelector('main').style.display = 'none';
+
+  try {
+    const email = await AUTH.init();
+
+    if (email === null) {
+      // Not logged in — show login screen
+      document.getElementById('login-screen').style.display = 'flex';
+      return;
+    }
+
+    if (email === false) {
+      // Logged in but wrong domain
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('denied-screen').style.display = 'flex';
+      document.getElementById('denied-email').textContent = AUTH.getEmail();
+      return;
+    }
+
+    // Authenticated and domain is valid — show the app
+    currentUserEmail = email;
+    document.getElementById('login-screen').style.display = 'none';
+    document.querySelector('nav').style.display = 'flex';
+    document.querySelector('main').style.display = 'flex';
+    document.getElementById('user-email').textContent = email;
+    document.getElementById('user-av').textContent = email[0].toUpperCase();
+
+    initFocusTags(); initUploads(); initPreviewSync();
+    checkSMART();
+    loadSessions();
+
+  } catch(e) {
+    // Auth error — show login screen with error
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('login-error').textContent = 'Auth error: ' + e.message;
+    document.getElementById('login-error').style.display = 'block';
   }
-  checkSMART();
-  loadSessions();
 };
 
 // ── SMART connectivity check ──────────────────────────────────
@@ -775,9 +843,6 @@ async function startClarification(){
   const product=document.getElementById('f-product').value.trim();
   const goal=document.getElementById('f-goal').value.trim();
   if(!product||!goal)return toast('Please fill in product name and research goal first.');
-  // Save email
-  const email=document.getElementById('f-email').value.trim();
-  if(email){currentUserEmail=email;localStorage.setItem('candor_user_email',email);document.getElementById('user-email').textContent=email;document.getElementById('user-av').textContent=email[0].toUpperCase();}
 
   document.getElementById('clarif-section').style.display='block';
   document.getElementById('clarif-spin').style.display='inline-block';
