@@ -87,7 +87,7 @@ tbody tr:hover .row-acts{opacity:1;}
 .cf{overflow-y:auto;padding:28px 32px;}
 .cf::-webkit-scrollbar{width:4px;}
 .cf::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
-.cprev{border-left:1px solid var(--border);background:var(--sf);overflow-y:auto;padding:24px;box-shadow:-2px 0 8px rgba(0,0,0,0.03);}
+.cprev{border-left:1px solid var(--border);background:var(--sf);overflow-y:auto;padding:24px;}
 .form-heading{font-family:'Fraunces',serif;font-size:20px;font-weight:300;letter-spacing:-0.4px;margin-bottom:4px;}
 .form-heading em{font-style:italic;color:var(--accent);}
 .form-sub{font-size:13px;color:var(--ink3);margin-bottom:24px;}
@@ -101,10 +101,15 @@ tbody tr:hover .row-acts{opacity:1;}
 .frow{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .selwrap{position:relative;}
 .selwrap::after{content:'▾';position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--ink3);pointer-events:none;font-size:11px;}
+/* Issue 4 fix: max 3 focus tags */
 .tags{display:flex;flex-wrap:wrap;gap:6px;}
 .tag{padding:5px 12px;border:1px solid var(--border);border-radius:20px;font-size:11px;color:var(--ink3);cursor:pointer;transition:all 0.15s;font-family:'JetBrains Mono',monospace;background:var(--sf);}
 .tag:hover{border-color:var(--accent);color:var(--accent);}
 .tag.on{background:var(--adim);border-color:var(--aborder);color:var(--accent);}
+.tag.disabled{opacity:0.35;cursor:not-allowed;}
+.tag.disabled:hover{border-color:var(--border);color:var(--ink3);}
+.focus-counter{font-size:11px;color:var(--ink3);font-family:'JetBrains Mono',monospace;margin-top:6px;}
+.focus-counter.maxed{color:var(--amber);}
 .upzone{border:2px dashed var(--border);border-radius:10px;padding:20px;text-align:center;cursor:pointer;position:relative;background:var(--s2);transition:all 0.2s;}
 .upzone:hover,.upzone.drag{border-color:var(--accent);background:var(--adim);}
 .upzone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
@@ -115,14 +120,35 @@ tbody tr:hover .row-acts{opacity:1;}
 .frem:hover{color:var(--red);}
 .up-prog{height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:8px;display:none;}
 .up-bar{height:100%;background:var(--accent);border-radius:2px;transition:width 0.3s;}
+/* Issue 3: AI improve goal button */
+.field-with-action{position:relative;}
+.ai-improve-btn{position:absolute;right:8px;bottom:8px;padding:4px 10px;background:var(--accent);color:white;border:none;border-radius:6px;font-size:11px;font-family:'Instrument Sans',sans-serif;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:4px;}
+.ai-improve-btn:hover{background:var(--accent2);}
+.ai-improve-btn:disabled{opacity:0.4;cursor:not-allowed;}
+/* Clarification */
 .clarif-box{background:var(--sf);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-top:12px;box-shadow:0 1px 4px rgba(0,0,0,0.04);}
 .clarif-title{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--ink3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
 .clarif-status{font-size:12px;color:var(--ink3);margin-bottom:10px;font-style:italic;}
-.clarif-msgs{max-height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
-.cm{padding:10px 13px;border-radius:10px;font-size:13px;line-height:1.6;}
+.clarif-msgs{max-height:320px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;margin-bottom:12px;}
+.clarif-msgs::-webkit-scrollbar{width:3px;}
+.clarif-msgs::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+/* Issue 1 fix: markdown-rendered clarification messages */
+.cm{padding:10px 13px;border-radius:10px;font-size:13px;line-height:1.7;}
 .cm.ai{background:var(--s2);border:1px solid var(--border);}
 .cm.user{background:var(--adim);border:1px solid var(--aborder);}
-.clarif-input-row{display:flex;gap:8px;}
+.cm h3{font-size:13px;font-weight:600;color:var(--accent);margin:10px 0 4px;}
+.cm strong{font-weight:600;}
+.cm em{font-style:italic;}
+.cm ol,.cm ul{padding-left:18px;margin:6px 0;}
+.cm li{margin-bottom:4px;}
+/* Issue 5: MCQ chips */
+.mcq-question{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;}
+.mcq-q-text{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:8px;}
+.mcq-chips{display:flex;flex-wrap:wrap;gap:6px;}
+.mcq-chip{padding:6px 12px;border:1.5px solid var(--border);border-radius:20px;font-size:12px;color:var(--ink2);cursor:pointer;transition:all 0.15s;background:var(--sf);}
+.mcq-chip:hover{border-color:var(--accent);color:var(--accent);}
+.mcq-chip.selected{background:var(--adim);border-color:var(--accent);color:var(--accent);font-weight:600;}
+.clarif-input-row{display:flex;gap:8px;margin-top:8px;}
 .clarif-input{flex:1;background:var(--s2);border:1.5px solid var(--border);border-radius:9px;padding:9px 12px;color:var(--ink);font-family:'Instrument Sans',sans-serif;font-size:13px;outline:none;}
 .clarif-input:focus{border-color:var(--accent);background:var(--sf);}
 .prev-label{font-size:11px;font-weight:600;color:var(--ink3);margin-bottom:14px;text-transform:uppercase;letter-spacing:0.5px;}
@@ -153,7 +179,7 @@ tbody tr:hover .row-acts{opacity:1;}
 .copy-btn{padding:7px 13px;background:var(--s2);border:1px solid var(--border);border-radius:8px;color:var(--ink2);font-size:11px;cursor:pointer;white-space:nowrap;font-family:'JetBrains Mono',monospace;transition:all 0.15s;}
 .copy-btn:hover{border-color:var(--accent);color:var(--accent);}
 .copy-btn.copied{border-color:var(--accent);color:var(--accent);background:var(--adim);}
-.open-btn{padding:7px 13px;background:var(--accent);border:none;border-radius:8px;color:white;font-size:11px;cursor:pointer;white-space:nowrap;font-family:'JetBrains Mono',monospace;transition:all 0.15s;text-decoration:none;display:inline-flex;align-items:center;gap:4px;}
+.open-btn{padding:7px 13px;background:var(--accent);border:none;border-radius:8px;color:white;font-size:11px;cursor:pointer;white-space:nowrap;font-family:'JetBrains Mono',monospace;text-decoration:none;display:inline-flex;align-items:center;gap:4px;}
 .open-btn:hover{background:var(--accent2);}
 .coadmin-section{background:var(--sf);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:20px;}
 .coadmin-title{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--ink3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;}
@@ -164,25 +190,38 @@ tbody tr:hover .row-acts{opacity:1;}
 .coadmin-input{flex:1;background:var(--s2);border:1.5px solid var(--border);border-radius:9px;padding:8px 11px;color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:12px;outline:none;}
 .coadmin-input:focus{border-color:var(--accent);background:var(--sf);}
 .slabel{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--ink3);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
-.tc{background:var(--sf);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:10px;cursor:pointer;transition:border-color 0.15s;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
+/* Issue 15 fix: transcript cards expand fully */
+.tc{background:var(--sf);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:14px;transition:border-color 0.15s;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
 .tc:hover{border-color:var(--border2);}
 .tc.open{border-color:var(--accent);}
-.tc-hdr{padding:13px 16px;display:flex;align-items:center;gap:10px;}
+.tc-hdr{padding:13px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;}
 .tc-av{width:34px;height:34px;border-radius:50%;background:var(--adim);border:1.5px solid var(--aborder);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--accent);flex-shrink:0;}
 .tc-name{font-size:13px;font-weight:600;}
 .tc-meta{font-size:10px;color:var(--ink3);margin-top:2px;font-family:'JetBrains Mono',monospace;}
 .tc-arr{margin-left:auto;color:var(--ink3);transition:transform 0.2s;font-size:12px;}
 .tc.open .tc-arr{transform:rotate(180deg);}
-.tc-body{display:none;padding:0 16px 16px;border-top:1px solid var(--border);}
+.tc-body{display:none;padding:16px;border-top:1px solid var(--border);}
 .tc.open .tc-body{display:block;}
-.chat-log{max-height:300px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;margin-top:12px;}
-.log-msg{padding:9px 13px;border-radius:11px;font-size:12px;line-height:1.6;max-width:85%;}
+/* Issue 15: no max-height constraint on chat log */
+.chat-log{display:flex;flex-direction:column;gap:10px;}
+.log-msg{padding:10px 14px;border-radius:11px;font-size:13px;line-height:1.65;max-width:85%;}
 .log-msg.ai{background:var(--s2);border:1px solid var(--border);}
 .log-msg.user{background:var(--adim);border:1px solid var(--aborder);align-self:flex-end;}
-.log-role{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--ink3);margin-bottom:2px;}
-.summary-box{background:var(--sf);border:1px solid var(--aborder);border-radius:var(--r);padding:18px;margin-bottom:18px;box-shadow:0 1px 4px rgba(45,106,79,0.08);}
-.summary-content{font-size:13px;line-height:1.75;white-space:pre-wrap;}
-.summary-content h2{color:var(--accent);margin:14px 0 6px;font-size:12px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;}
+.log-role{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--ink3);margin-bottom:3px;}
+/* Issue 18 fix: summary formatting */
+.summary-box{background:var(--sf);border:1px solid var(--aborder);border-radius:var(--r);padding:20px;margin-bottom:18px;box-shadow:0 1px 4px rgba(45,106,79,0.08);}
+.summary-content{font-size:13px;line-height:1.75;color:var(--ink);}
+.summary-content h2{color:var(--accent);margin:18px 0 8px;font-size:12px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.8px;border-bottom:1px solid var(--aborder);padding-bottom:4px;}
+.summary-content h2:first-child{margin-top:0;}
+.summary-content strong{font-weight:600;}
+.summary-content em{font-style:italic;}
+.summary-content ul,.summary-content ol{padding-left:18px;margin:6px 0 10px;}
+.summary-content li{margin-bottom:4px;}
+.summary-content blockquote{border-left:3px solid var(--accent);padding-left:12px;color:var(--ink2);margin:8px 0;font-style:italic;}
+/* Issue 19: summary export buttons */
+.summary-actions{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+/* Issue 16: summary loading */
+.sum-loading{display:flex;align-items:center;gap:10px;padding:24px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:18px;font-size:13px;color:var(--ink2);}
 .asec{margin-bottom:20px;}
 .albl{font-size:9px;font-family:'JetBrains Mono',monospace;color:var(--ink3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;}
 .bignumber{font-size:34px;font-weight:600;letter-spacing:-1.5px;font-family:'Fraunces',serif;}
@@ -208,7 +247,13 @@ tbody tr:hover .row-acts{opacity:1;}
 .preview-input:focus{border-color:var(--accent);background:var(--sf);}
 .pb{padding:10px 13px;border-radius:13px;font-size:13px;line-height:1.6;max-width:78%;}
 .pb.ai{background:var(--s2);border:1px solid var(--border);border-bottom-left-radius:4px;}
-.pb.user{background:var(--accent);color:white;border-bottom-right-radius:4px;align-self:flex-end;}
+.pb.user{background:var(--accent);color:white;border-bottom-right-radius:4px;}
+/* Issue 6 fix: markdown in preview bubbles */
+.pb h3{font-size:13px;font-weight:600;margin:8px 0 4px;}
+.pb strong{font-weight:600;}
+.pb em{font-style:italic;}
+.pb ol,.pb ul{padding-left:16px;margin:4px 0;}
+.pb li{margin-bottom:3px;}
 .preview-row{display:flex;gap:8px;}
 .preview-row.user{flex-direction:row-reverse;}
 .preview-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px;}
@@ -227,11 +272,18 @@ tbody tr:hover .row-acts{opacity:1;}
 .loading-row{display:flex;justify-content:center;align-items:center;gap:10px;padding:48px;color:var(--ink3);font-size:13px;}
 .smart-warn{background:var(--amber-dim);border:1px solid var(--amber);border-radius:10px;padding:12px 16px;font-size:12px;color:var(--ink2);margin:12px 32px 0;display:none;}
 .smart-warn.show{display:block;}
+/* Print styles for Issue 19 */
+@media print{
+  nav,.smart-warn,.share-box,.coadmin-section,.create-acts,.dh>div:last-child,.summary-actions,#transcript-list,.dsb{display:none!important;}
+  .dm{padding:0;}
+  .summary-box{box-shadow:none;border:1px solid #ccc;}
+}
 </style>
 </head>
 <body>
+
 <!-- LOGIN SCREEN -->
-<div id="login-screen" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:1000;display:flex;align-items:center;justify-content:center;">
+<div id="login-screen" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:1000;align-items:center;justify-content:center;">
   <div style="background:var(--sf);border:1px solid var(--border);border-radius:20px;padding:48px 40px;max-width:400px;width:100%;text-align:center;box-shadow:0 12px 48px rgba(0,0,0,0.08);">
     <div style="font-family:'Fraunces',serif;font-size:28px;font-weight:300;letter-spacing:-0.5px;margin-bottom:6px;">Candor <em style="font-style:italic;color:var(--accent)">Research</em></div>
     <div style="font-size:13px;color:var(--ink3);margin-bottom:32px;">AI-powered UX research interviews</div>
@@ -244,12 +296,12 @@ tbody tr:hover .row-acts{opacity:1;}
   </div>
 </div>
 
-<!-- ACCESS DENIED SCREEN -->
+<!-- ACCESS DENIED -->
 <div id="denied-screen" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:1000;align-items:center;justify-content:center;">
   <div style="background:var(--sf);border:1px solid var(--border);border-radius:20px;padding:48px 40px;max-width:400px;width:100%;text-align:center;box-shadow:0 12px 48px rgba(0,0,0,0.08);">
     <div style="font-size:40px;margin-bottom:16px;">🔒</div>
     <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:300;margin-bottom:8px;">Access Restricted</div>
-    <div style="font-size:13px;color:var(--ink2);line-height:1.6;margin-bottom:24px;">This tool is only available to Shopee / SPX Express team members.<br><br>You signed in as <strong id="denied-email"></strong>.<br><br>Please use your <strong>@shopee.com</strong> or <strong>@spxexpress.com</strong> account.</div>
+    <div style="font-size:13px;color:var(--ink2);line-height:1.6;margin-bottom:24px;">Signed in as <strong id="denied-email"></strong>.<br>Please use your <strong>@shopee.com</strong> or <strong>@spxexpress.com</strong> account.</div>
     <button onclick="AUTH.signOut()" style="padding:10px 20px;background:var(--accent);color:white;border:none;border-radius:9px;font-family:'Instrument Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">Sign out & try again</button>
   </div>
 </div>
@@ -261,10 +313,7 @@ tbody tr:hover .row-acts{opacity:1;}
     <button class="ntab" onclick="showView('create')">＋ New Session</button>
   </div>
   <div class="nav-right">
-    <div class="smart-pill" id="smart-pill">
-      <div class="sdot" id="sdot"></div>
-      <span id="slbl">Checking SMART…</span>
-    </div>
+    <div class="smart-pill" id="smart-pill"><div class="sdot" id="sdot"></div><span id="slbl">Checking SMART…</span></div>
     <div class="user-chip">
       <div class="user-av" id="user-av">?</div>
       <span id="user-email">loading…</span>
@@ -273,9 +322,7 @@ tbody tr:hover .row-acts{opacity:1;}
   </div>
 </nav>
 
-<div class="smart-warn" id="smart-warn">
-  ⚠️ Cannot reach SMART agent. Make sure you are connected to <strong>Shopee WiFi or VPN</strong> before using AI features.
-</div>
+<div class="smart-warn" id="smart-warn">⚠️ Cannot reach SMART agent. Make sure you are connected to <strong>Shopee WiFi or VPN</strong> and the proxy is running (<code>node proxy.js</code>) before using AI features.</div>
 
 <main>
 
@@ -291,13 +338,10 @@ tbody tr:hover .row-acts{opacity:1;}
     <div class="stat"><div class="stat-v" id="s-resp" style="color:var(--blue)">—</div><div class="stat-l">Responses</div></div>
     <div class="stat"><div class="stat-v" id="s-comp" style="color:var(--amber)">—</div><div class="stat-l">Completion</div></div>
   </div>
-  <div style="padding:0 32px">
-    <div class="view-toggle">
-      <!-- Issue 1 fix: client-side filter, no re-fetch -->
-      <div class="vtab on" onclick="setFilter('mine',this)">My sessions</div>
-      <div class="vtab" onclick="setFilter('all',this)">All org sessions</div>
-    </div>
-  </div>
+  <div style="padding:0 32px"><div class="view-toggle">
+    <div class="vtab on" onclick="setFilter('mine',this)">My sessions</div>
+    <div class="vtab" onclick="setFilter('all',this)">All org sessions</div>
+  </div></div>
   <div class="tbl-wrap"><div id="sessions-wrap"><div class="loading-row"><div class="spin"></div> Loading sessions…</div></div></div>
 </div>
 
@@ -310,7 +354,14 @@ tbody tr:hover .row-acts{opacity:1;}
       <div class="fsec">
         <div class="fsec-title">Research Context</div>
         <div class="field"><label>Product / Feature *</label><input id="f-product" placeholder="e.g. SPX Linehaul Control Tower — Alert Dashboard"></div>
-        <div class="field"><label>Research goal *</label><textarea id="f-goal" placeholder="What do you need to learn? Be specific."></textarea></div>
+        <!-- Issue 3: AI improve goal button -->
+        <div class="field">
+          <label>Research goal *</label>
+          <div class="field-with-action">
+            <textarea id="f-goal" placeholder="What do you need to learn? Be specific." style="padding-bottom:36px;"></textarea>
+            <button class="ai-improve-btn" id="improve-goal-btn" onclick="improveGoal()">✦ Improve with AI</button>
+          </div>
+        </div>
         <div class="field"><label>User persona</label><input id="f-persona" placeholder="e.g. Ops supervisor, 1–3 yrs experience, uses dashboard daily"></div>
         <div class="field"><label>Your name / session owner</label><input id="f-creator" placeholder="e.g. Clarence Chng"></div>
       </div>
@@ -328,7 +379,8 @@ tbody tr:hover .row-acts{opacity:1;}
             <option>ภาษาไทย</option><option>Filipino</option><option>Português (BR)</option><option>中文</option>
           </select></div></div>
         </div>
-        <div class="field"><label>Focus areas</label>
+        <!-- Issue 4: max 3 focus areas -->
+        <div class="field"><label>Focus areas <span style="font-weight:400;text-transform:none;letter-spacing:0">(pick up to 3)</span></label>
           <div class="tags" id="focus-tags">
             <div class="tag on" data-v="First impressions">First impressions</div>
             <div class="tag" data-v="Task flow">Task flow</div>
@@ -337,8 +389,9 @@ tbody tr:hover .row-acts{opacity:1;}
             <div class="tag" data-v="Missing features">Missing features</div>
             <div class="tag" data-v="Emotional response">Emotional response</div>
             <div class="tag" data-v="Navigation">Navigation</div>
-            <div class="tag" data-v="Trust">Trust / credibility</div>
+            <div class="tag" data-v="Trust / credibility">Trust / credibility</div>
           </div>
+          <div class="focus-counter" id="focus-counter">2 / 3 selected</div>
         </div>
       </div>
       <div class="fsec">
@@ -353,12 +406,10 @@ tbody tr:hover .row-acts{opacity:1;}
           <div class="up-prog" id="up-prog"><div class="up-bar" id="up-bar"></div></div>
           <div class="flist" id="flist"></div>
         </div>
-        <div class="field">
-          <label>Custom questions (one per line)</label>
-          <textarea id="f-questions" placeholder="What was your first impression of this screen?&#10;What would you expect to happen if you tapped X?&#10;Was anything confusing or unclear?" style="min-height:100px;font-family:'JetBrains Mono',monospace;font-size:12px;"></textarea>
+        <div class="field"><label>Custom questions (one per line)</label>
+          <textarea id="f-questions" placeholder="What was your first impression?&#10;What would you do next?&#10;What was confusing?" style="min-height:90px;font-family:'JetBrains Mono',monospace;font-size:12px;"></textarea>
         </div>
-        <div class="field">
-          <label>Reference URL (Figma, Google Doc, BRD)</label>
+        <div class="field"><label>Reference URL (Figma, Google Doc, BRD)</label>
           <input id="f-url" type="url" placeholder="https://www.figma.com/file/…">
           <div style="font-size:11px;color:var(--ink3);margin-top:4px">AI background context — not shown to participants.</div>
         </div>
@@ -369,8 +420,10 @@ tbody tr:hover .row-acts{opacity:1;}
         <div class="clarif-box">
           <div class="clarif-title"><div class="spin" id="clarif-spin" style="display:none"></div><span>AI Clarifications</span></div>
           <div class="clarif-msgs" id="clarif-msgs"></div>
+          <!-- Issue 5: MCQ replies rendered here by JS -->
+          <div id="mcq-area"></div>
           <div class="clarif-input-row">
-            <input class="clarif-input" id="clarif-input" placeholder="Reply to AI's questions…" onkeydown="if(event.key==='Enter')sendClarification()">
+            <input class="clarif-input" id="clarif-input" placeholder="Or type a custom reply…" onkeydown="if(event.key==='Enter')sendClarification()">
             <button class="btn-p" style="padding:8px 14px" onclick="sendClarification()">Send</button>
           </div>
           <div style="display:flex;gap:8px;margin-top:10px">
@@ -401,7 +454,7 @@ tbody tr:hover .row-acts{opacity:1;}
       <div class="pcard"><div class="pcard-l">Product</div><div class="pcard-v" id="prev-product">—</div></div>
       <div class="pcard"><div class="pcard-l">Goal</div><div class="pcard-v" id="prev-goal" style="font-size:12px;color:var(--ink3)">—</div></div>
       <div class="pcard"><div class="pcard-l">Duration</div><div class="pcard-v" id="prev-dur">7 min · ~8 questions</div></div>
-      <div class="pcard"><div class="pcard-l">Focus</div><div class="pcard-v" id="prev-focus" style="font-size:12px">First impressions, Pain points</div></div>
+      <div class="pcard"><div class="pcard-l">Focus</div><div class="pcard-v" id="prev-focus" style="font-size:12px">—</div></div>
       <div class="pcard" id="prev-files-card" style="display:none"><div class="pcard-l">Files</div><div class="pcard-v" id="prev-files" style="font-size:12px;color:var(--ink3)"></div></div>
       <div style="margin-top:16px"><div class="pcard-l" style="margin-bottom:5px">Participant link</div><div style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--ink3);word-break:break-all;line-height:1.5" id="prev-link">Publish to generate link</div></div>
     </div>
@@ -420,11 +473,11 @@ tbody tr:hover .row-acts{opacity:1;}
             <option value="active">Active</option><option value="draft">Draft</option><option value="archived">Archived</option>
           </select>
           <button class="btn-g" onclick="exportMd()">Export .md</button>
+          <!-- Issue 16: loading state on generate summary -->
           <button class="btn-g" onclick="genSummary()" id="sum-btn">Generate Summary</button>
           <button class="btn-danger" id="delete-btn" onclick="deleteSession()">Delete</button>
         </div>
       </div>
-      <!-- Issue 2 fix: Open ↗ button added -->
       <div class="share-box">
         <div><div class="share-lbl">PIN</div><div class="share-pin" id="d-pin">—</div></div>
         <div class="share-info"><div class="share-lbl">Participant link</div><div class="share-url" id="d-url">—</div></div>
@@ -441,8 +494,20 @@ tbody tr:hover .row-acts{opacity:1;}
           <button class="btn-g" onclick="addCoAdmin()">Add</button>
         </div>
       </div>
+      <!-- Issue 16+17: summary area with loading + scroll anchor -->
+      <div id="summary-loading" style="display:none">
+        <div class="sum-loading"><div class="spin"></div> Generating summary… this may take up to 60 seconds.</div>
+      </div>
       <div id="summary-area" style="display:none">
-        <div class="slabel" style="margin-bottom:10px">AI Research Summary</div>
+        <!-- Issue 19: export buttons -->
+        <div class="summary-actions">
+          <div class="slabel" style="margin-bottom:0;line-height:28px;">AI Research Summary</div>
+          <div style="margin-left:auto;display:flex;gap:6px;">
+            <button class="btn-g" onclick="copySummary()">📋 Copy</button>
+            <button class="btn-g" onclick="printSummary()">🖨 Print / PDF</button>
+            <button class="btn-g" onclick="exportMd()">↓ Export .md</button>
+          </div>
+        </div>
         <div class="summary-box"><div class="summary-content" id="summary-content"></div></div>
       </div>
       <div class="slabel">Responses (<span id="d-count">0</span>)</div>
@@ -477,95 +542,101 @@ tbody tr:hover .row-acts{opacity:1;}
 
 <script>
 // ── State ─────────────────────────────────────────────────────
-let allSessions = [], currentSession = null, filterMode = 'mine';
-let currentUserEmail = '';
-let uploadedFiles = [], selectedFocus = ['First impressions','Pain points'];
-let clarificationHistory = [], clarThreadId = null, interviewPrompt = '', publishedPin = null, emailList = [];
-let previewHistory = [], previewThreadId = null;
+let allSessions=[], currentSession=null, filterMode='mine';
+let currentUserEmail='';
+let uploadedFiles=[], selectedFocus=['First impressions','Pain points'];
+let clarificationHistory=[], clarThreadId=null, interviewPrompt='', publishedPin=null, emailList=[];
+let previewHistory=[], previewThreadId=null;
+let mcqAnswers={};
+
+// ── Issue 1/6/18 fix: Markdown renderer ──────────────────────
+function renderMarkdown(text) {
+  if (!text) return '';
+  return text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    // Headers
+    .replace(/^### (.+)$/gm,'<h3>$1</h3>')
+    .replace(/^## (.+)$/gm,'<h2>$1</h2>')
+    .replace(/^# (.+)$/gm,'<h2>$1</h2>')
+    // Bold + italic
+    .replace(/\*\*\*(.+?)\*\*\*/g,'<strong><em>$1</em></strong>')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g,'<em>$1</em>')
+    // Numbered questions (bold the number)
+    .replace(/^(\d+)\.\s+\*\*(.+?)\*\*/gm,'<br><strong>$1. $2</strong>')
+    .replace(/^(\d+)\.\s+(.+)$/gm,'<br><strong>$1.</strong> $2')
+    // Bullet points
+    .replace(/^[-•]\s+(.+)$/gm,'<li>$1</li>')
+    .replace(/(<li>.*<\/li>)/s,'<ul>$1</ul>')
+    // Horizontal rules
+    .replace(/^---+$/gm,'<hr style="border:none;border-top:1px solid var(--border);margin:10px 0">')
+    // Blockquotes
+    .replace(/^>\s+(.+)$/gm,'<blockquote>$1</blockquote>')
+    // Line breaks
+    .replace(/\n\n/g,'</p><p>').replace(/\n/g,'<br>')
+    .replace(/^(.+)$/, '<p>$1</p>');
+}
 
 // ── Auth ──────────────────────────────────────────────────────
 async function handleSignIn() {
-  const btn = document.getElementById('google-signin-btn');
-  btn.textContent = 'Signing in…'; btn.disabled = true;
-  try { await AUTH.signInWithGoogle(); }
-  catch(e) {
-    btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg> Sign in with Google`;
-    btn.disabled = false;
-    document.getElementById('login-error').textContent = e.message;
-    document.getElementById('login-error').style.display = 'block';
+  const btn=document.getElementById('google-signin-btn');
+  btn.textContent='Signing in…';btn.disabled=true;
+  try{await AUTH.signInWithGoogle();}
+  catch(e){
+    btn.innerHTML=`<svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg> Sign in with Google`;
+    btn.disabled=false;
+    document.getElementById('login-error').textContent=e.message;
+    document.getElementById('login-error').style.display='block';
   }
 }
 
 // ── Init ──────────────────────────────────────────────────────
 window.onload = async () => {
-  // Show login screen while checking auth
-  document.getElementById('login-screen').style.display = 'flex';
-  document.querySelector('nav').style.display = 'none';
-  document.querySelector('main').style.display = 'none';
-
+  document.getElementById('login-screen').style.display='flex';
+  document.querySelector('nav').style.display='none';
+  document.querySelector('main').style.display='none';
   try {
     const email = await AUTH.init();
-
-    if (email === null) {
-      // Not logged in — show login screen
-      document.getElementById('login-screen').style.display = 'flex';
+    if(email===null){document.getElementById('login-screen').style.display='flex';return;}
+    if(email===false){
+      document.getElementById('login-screen').style.display='none';
+      document.getElementById('denied-screen').style.display='flex';
+      document.getElementById('denied-email').textContent=AUTH.getEmail();
       return;
     }
-
-    if (email === false) {
-      // Logged in but wrong domain
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('denied-screen').style.display = 'flex';
-      document.getElementById('denied-email').textContent = AUTH.getEmail();
-      return;
-    }
-
-    // Authenticated and domain is valid — show the app
-    currentUserEmail = email;
-    document.getElementById('login-screen').style.display = 'none';
-    document.querySelector('nav').style.display = 'flex';
-    document.querySelector('main').style.display = 'flex';
-    document.getElementById('user-email').textContent = email;
-    document.getElementById('user-av').textContent = email[0].toUpperCase();
-
-    initFocusTags(); initUploads(); initPreviewSync();
-    checkSMART();
-    loadSessions();
-
+    currentUserEmail=email;
+    document.getElementById('login-screen').style.display='none';
+    document.querySelector('nav').style.display='flex';
+    document.querySelector('main').style.display='flex';
+    document.getElementById('user-email').textContent=email;
+    document.getElementById('user-av').textContent=email[0].toUpperCase();
+    initFocusTags();initUploads();initPreviewSync();
+    checkSMART();loadSessions();
   } catch(e) {
-    // Auth error — show login screen with error
-    document.getElementById('login-screen').style.display = 'flex';
-    document.getElementById('login-error').textContent = 'Auth error: ' + e.message;
-    document.getElementById('login-error').style.display = 'block';
+    document.getElementById('login-screen').style.display='flex';
+    document.getElementById('login-error').textContent='Auth error: '+e.message;
+    document.getElementById('login-error').style.display='block';
   }
 };
 
-// ── SMART connectivity check ──────────────────────────────────
+// ── SMART check ───────────────────────────────────────────────
 async function checkSMART() {
   try {
-    const res = await fetch(CONFIG.SMART_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        endpoint_deployment_hash_id: CONFIG.SMART_HASH_ID,
-        endpoint_deployment_key: CONFIG.SMART_KEY,
-        user_id: 'ping@shopee.com',
-        message: { input_str: 'ping' },
-      }),
-      signal: AbortSignal.timeout(8000),
-    });
-    document.getElementById('sdot').className = 'sdot ok';
-    document.getElementById('slbl').textContent = 'SMART connected';
+    await fetch(CONFIG.SMART_URL,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({endpoint_deployment_hash_id:CONFIG.SMART_HASH_ID,endpoint_deployment_key:CONFIG.SMART_KEY,user_id:'ping@shopee.com',message:{input_str:'ping'}}),
+      signal:AbortSignal.timeout(8000)});
+    document.getElementById('sdot').className='sdot ok';
+    document.getElementById('slbl').textContent='SMART connected';
     document.getElementById('smart-warn').classList.remove('show');
   } catch(e) {
-    document.getElementById('sdot').className = 'sdot err';
-    document.getElementById('slbl').textContent = 'SMART unreachable';
+    document.getElementById('sdot').className='sdot err';
+    document.getElementById('slbl').textContent='SMART unreachable';
     document.getElementById('smart-warn').classList.add('show');
   }
 }
 
 // ── Nav ───────────────────────────────────────────────────────
-function showView(v) {
+function showView(v){
   document.querySelectorAll('.view').forEach(el=>el.classList.remove('on'));
   document.querySelectorAll('.ntab').forEach(el=>el.classList.remove('on'));
   document.getElementById('view-'+v).classList.add('on');
@@ -573,53 +644,47 @@ function showView(v) {
   if(v==='create'){resetCreate();document.querySelectorAll('.ntab')[1].classList.add('on');}
 }
 
-// ── Issue 1 fix: load once, filter client-side ────────────────
-function setFilter(mode, el) {
-  filterMode = mode;
+function setFilter(mode,el){
+  filterMode=mode;
   document.querySelectorAll('.vtab').forEach(t=>t.classList.remove('on'));
   el.classList.add('on');
-  renderDashboard(allSessions); // no re-fetch — instant
+  renderDashboard(allSessions);
 }
 
-async function loadSessions() {
+// ── Sessions ──────────────────────────────────────────────────
+async function loadSessions(){
   document.getElementById('sessions-wrap').innerHTML='<div class="loading-row"><div class="spin"></div> Loading sessions…</div>';
-  try {
-    allSessions = await DB.getSessions('all', currentUserEmail);
+  try{
+    allSessions=await DB.getSessions('all',currentUserEmail);
     renderDashboard(allSessions);
-  } catch(e) {
+  }catch(e){
     document.getElementById('sessions-wrap').innerHTML=`<div class="empty"><div class="empty-icon">⚠️</div><div>${e.message}</div></div>`;
   }
 }
 
-function renderDashboard(data) {
-  // Client-side filter
-  const filtered = filterMode === 'mine'
-    ? data.filter(s => s.is_owner || s.is_co_admin)
-    : data;
-
-  const active = filtered.filter(s=>s.status==='active').length;
-  const totalR = filtered.reduce((a,s)=>a+(parseInt(s.response_count)||0),0);
-  const totalS = filtered.reduce((a,s)=>a+(s.participants?.[0]?.count||0),0);
-  document.getElementById('s-total').textContent = filtered.length;
-  document.getElementById('s-active').textContent = active;
-  document.getElementById('s-resp').textContent = totalR;
-  document.getElementById('s-comp').textContent = totalS ? Math.round(totalR/totalS*100)+'%' : '—';
-
+function renderDashboard(data){
+  const filtered=filterMode==='mine'?data.filter(s=>s.is_owner||s.is_co_admin):data;
+  const active=filtered.filter(s=>s.status==='active').length;
+  const totalR=filtered.reduce((a,s)=>a+(parseInt(s.response_count)||0),0);
+  document.getElementById('s-total').textContent=filtered.length;
+  document.getElementById('s-active').textContent=active;
+  document.getElementById('s-resp').textContent=totalR;
+  document.getElementById('s-comp').textContent=totalR?Math.round(totalR/Math.max(filtered.reduce((a,s)=>a+(s.participants?.[0]?.count||0),0),totalR)*100)+'%':'—';
   if(!filtered.length){
     document.getElementById('sessions-wrap').innerHTML='<div class="empty"><div class="empty-icon">📋</div><div style="font-size:15px;font-weight:600;margin-bottom:6px">No sessions yet</div><div>Create your first research session to get started.</div></div>';
     return;
   }
-  const rows = filtered.map(s => {
-    const resp = parseInt(s.response_count)||0;
-    const date = s.created_at ? new Date(s.created_at).toLocaleDateString('en-SG',{day:'numeric',month:'short'}) : '—';
-    const ownerLabel = s.is_owner ? `<span class="owner-tag">Owner</span>` : `<span class="coadmin-tag">Co-admin</span>`;
+  const rows=filtered.map(s=>{
+    const resp=parseInt(s.response_count)||0;
+    const date=s.created_at?new Date(s.created_at).toLocaleDateString('en-SG',{day:'numeric',month:'short'}):'—';
+    const ownerLabel=s.is_owner?`<span class="owner-tag">Owner</span>`:`<span class="coadmin-tag">Co-admin</span>`;
     return `<tr onclick="openSession('${s.pin}')">
       <td><div class="pin-badge">${s.pin}</div></td>
       <td><div style="font-weight:600">${esc(s.product||'Untitled')}</div><div style="font-size:11px;color:var(--ink3);margin-top:2px">${esc((s.goal||'').slice(0,55))}${(s.goal||'').length>55?'…':''}</div></td>
       <td><span class="status-p ${s.status||'draft'}">${s.status||'draft'}</span></td>
       <td>${ownerLabel}</td>
       <td><div class="rbar"><div class="mbar"><div class="mbar-f" style="width:${Math.min(resp*10,100)}%"></div></div><span style="font-size:12px;color:var(--ink3);font-family:'JetBrains Mono',monospace">${resp}</span></div></td>
-      <td style="font-size:11px;color:var(--ink3)">${date} · ${esc(s.created_by||'')}</td>
+      <td style="font-size:11px;color:var(--ink3)">${date} · ${esc(s.created_by||'').split('@')[0]}</td>
       <td><div class="row-acts">
         <button class="ibtn" onclick="event.stopPropagation();copyPinLink('${s.pin}')" title="Copy link">🔗</button>
         ${s.is_owner?`<button class="ibtn danger" onclick="event.stopPropagation();confirmDelete('${s.pin}')" title="Delete">🗑</button>`:''}
@@ -630,50 +695,48 @@ function renderDashboard(data) {
 }
 
 // ── Detail ────────────────────────────────────────────────────
-async function openSession(pin) {
-  showView('detail'); currentSession = null;
+async function openSession(pin){
+  showView('detail');currentSession=null;
   document.getElementById('transcript-list').innerHTML='<div class="loading-row"><div class="spin"></div></div>';
   document.getElementById('summary-area').style.display='none';
-  try {
-    const session = await DB.getSession(pin);
-    currentSession = session;
-    document.getElementById('d-title').textContent = session.product||'Untitled';
-    document.getElementById('d-meta').textContent = `PIN: ${session.pin} · ${session.created_by||''} · ${session.duration_mins||7} min`;
-    document.getElementById('d-pin').textContent = session.pin;
-    const link = `${CONFIG.BASE_URL}/interview.html?pin=${session.pin}`;
-    document.getElementById('d-url').textContent = link;
-    document.getElementById('open-btn').href = link;
-    document.getElementById('d-status-sel').value = session.status||'draft';
-    const isOwner = session.created_by === currentUserEmail || !session.created_by;
-    document.getElementById('coadmin-section').style.display = isOwner ? 'block' : 'none';
-    document.getElementById('delete-btn').style.display = isOwner ? 'inline-flex' : 'none';
-    if(isOwner) renderCoAdmins(session.co_admins||[]);
+  document.getElementById('summary-loading').style.display='none';
+  try{
+    const session=await DB.getSession(pin);
+    currentSession=session;
+    document.getElementById('d-title').textContent=session.product||'Untitled';
+    document.getElementById('d-meta').textContent=`PIN: ${session.pin} · ${session.created_by||''} · ${session.duration_mins||7} min`;
+    document.getElementById('d-pin').textContent=session.pin;
+    const link=`${CONFIG.BASE_URL}/interview.html?pin=${session.pin}`;
+    document.getElementById('d-url').textContent=link;
+    document.getElementById('open-btn').href=link;
+    document.getElementById('d-status-sel').value=session.status||'draft';
+    const isOwner=session.created_by===currentUserEmail||!session.created_by;
+    document.getElementById('coadmin-section').style.display=isOwner?'block':'none';
+    document.getElementById('delete-btn').style.display=isOwner?'inline-flex':'none';
+    if(isOwner)renderCoAdmins(session.co_admins||[]);
+    // Issue 17: show summary if exists
     if(session.summary){
       document.getElementById('summary-area').style.display='block';
-      document.getElementById('summary-content').innerHTML = formatSummary(session.summary);
+      document.getElementById('summary-content').innerHTML=renderMarkdown(session.summary);
+      document.getElementById('sum-btn').textContent='Regenerate Summary';
     }
     loadTranscripts(pin);
-  } catch(e){ toast('Error: '+e.message); }
+  }catch(e){toast('Error: '+e.message);}
 }
 
 async function loadTranscripts(pin){
-  try{
-    const data = await DB.getTranscripts(pin);
-    renderTranscripts(data||[]);
-    renderAnalytics(data||[]);
-  }catch(e){}
+  try{const data=await DB.getTranscripts(pin);renderTranscripts(data||[]);renderAnalytics(data||[]);}catch(e){}
 }
 
 function renderTranscripts(data){
-  document.getElementById('d-count').textContent = data.length;
-  if(!data.length){
-    document.getElementById('transcript-list').innerHTML='<div class="empty"><div class="empty-icon">🎙</div><div style="font-weight:600;margin-bottom:6px">No responses yet</div><div>Share the PIN link with participants.</div></div>';
-    return;
-  }
+  document.getElementById('d-count').textContent=data.length;
+  if(!data.length){document.getElementById('transcript-list').innerHTML='<div class="empty"><div class="empty-icon">🎙</div><div style="font-weight:600;margin-bottom:6px">No responses yet</div><div>Share the PIN link with participants.</div></div>';return;}
+  // Issue 15: no max-height, full expansion
   document.getElementById('transcript-list').innerHTML=data.map((t,i)=>{
     const msgs=(t.transcript||[]).filter(m=>typeof m.content==='string');
     const date=t.completed_at?new Date(t.completed_at).toLocaleString('en-SG',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'—';
-    const chat=msgs.map(m=>`<div class="log-msg ${m.role==='assistant'?'ai':'user'}"><div class="log-role">${m.role==='assistant'?'AI Interviewer':esc(t.name)}</div>${esc(m.content)}</div>`).join('');
+    // Issue 6: render markdown in transcript messages
+    const chat=msgs.map(m=>`<div class="log-msg ${m.role==='assistant'?'ai':'user'}"><div class="log-role">${m.role==='assistant'?'AI Interviewer':esc(t.name)}</div>${renderMarkdown(m.content)}</div>`).join('');
     return `<div class="tc" id="tc${i}"><div class="tc-hdr" onclick="document.getElementById('tc${i}').classList.toggle('open')">
       <div class="tc-av">${(t.name||'?')[0].toUpperCase()}</div>
       <div><div class="tc-name">${esc(t.name)}</div><div class="tc-meta">${esc(t.role||'—')} · ${esc(t.language||'—')} · ${date}</div></div>
@@ -696,69 +759,72 @@ function renderAnalytics(data){
   breakdown('a-roles','role');breakdown('a-langs','language');
 }
 
+// Issue 16+17: summary with loading indicator and scroll
 async function genSummary(){
-  if(!currentSession?.pin) return toast('No session selected.');
-  const btn=document.getElementById('sum-btn');btn.textContent='Generating…';btn.disabled=true;
+  if(!currentSession?.pin)return toast('No session selected.');
+  const btn=document.getElementById('sum-btn');
+  btn.disabled=true;btn.textContent='Generating…';
+  document.getElementById('summary-loading').style.display='block';
+  document.getElementById('summary-area').style.display='none';
+  // Issue 17: scroll to loading indicator
+  document.getElementById('summary-loading').scrollIntoView({behavior:'smooth',block:'start'});
   try{
-    const transcripts = await DB.getTranscripts(currentSession.pin);
-    if(!transcripts.length){toast('No completed interviews yet.');btn.textContent='Generate Summary';btn.disabled=false;return;}
-    const result = await SMART.summarise(currentSession, transcripts, currentUserEmail);
-    await DB.saveSummary(currentSession.pin, result.text);
+    const transcripts=await DB.getTranscripts(currentSession.pin);
+    if(!transcripts.length){toast('No completed interviews yet.');btn.textContent='Generate Summary';btn.disabled=false;document.getElementById('summary-loading').style.display='none';return;}
+    const result=await SMART.summarise(currentSession,transcripts,currentUserEmail);
+    await DB.saveSummary(currentSession.pin,result.text);
+    document.getElementById('summary-loading').style.display='none';
     document.getElementById('summary-area').style.display='block';
-    document.getElementById('summary-content').innerHTML=formatSummary(result.text);
-    toast('Summary generated!');
-  }catch(e){toast('Error: '+e.message);}
+    // Issue 18: render markdown
+    document.getElementById('summary-content').innerHTML=renderMarkdown(result.text);
+    // Issue 17: scroll to summary
+    document.getElementById('summary-area').scrollIntoView({behavior:'smooth',block:'start'});
+    toast('✓ Summary generated!');
+  }catch(e){toast('Error: '+e.message);document.getElementById('summary-loading').style.display='none';}
   btn.textContent='Regenerate Summary';btn.disabled=false;
 }
 
-function formatSummary(text){
-  return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/## (.+)/g,'<h2>$1</h2>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+// Issue 19: copy and print
+function copySummary(){
+  const text=currentSession?.summary||document.getElementById('summary-content').innerText;
+  navigator.clipboard.writeText(text).then(()=>toast('Summary copied to clipboard!'));
+}
+function printSummary(){
+  window.print();
 }
 
 async function changeStatus(val){
-  if(!currentSession) return;
-  await DB.updateSession(currentSession.pin, {status:val});
+  if(!currentSession)return;
+  await DB.updateSession(currentSession.pin,{status:val});
   toast('Status updated to '+val);
-  // Update local cache
-  const s = allSessions.find(s=>s.pin===currentSession.pin);
-  if(s) s.status = val;
+  const s=allSessions.find(s=>s.pin===currentSession.pin);if(s)s.status=val;
 }
 
 async function deleteSession(){
   if(!currentSession?.pin||!confirm('Delete session '+currentSession.pin+'? This cannot be undone.'))return;
   await DB.deleteSession(currentSession.pin);
-  allSessions = allSessions.filter(s=>s.pin!==currentSession.pin);
-  toast('Session deleted');
-  showView('dashboard');
-  renderDashboard(allSessions);
+  allSessions=allSessions.filter(s=>s.pin!==currentSession.pin);
+  toast('Session deleted');showView('dashboard');renderDashboard(allSessions);
 }
 
 function confirmDelete(pin){
   if(!confirm('Delete this session?'))return;
-  DB.deleteSession(pin).then(()=>{
-    allSessions=allSessions.filter(s=>s.pin!==pin);
-    renderDashboard(allSessions);
-    toast('Deleted');
-  });
+  DB.deleteSession(pin).then(()=>{allSessions=allSessions.filter(s=>s.pin!==pin);renderDashboard(allSessions);toast('Deleted');});
 }
 
 function copyLink(){
   if(!currentSession?.pin)return;
-  const link=`${CONFIG.BASE_URL}/interview.html?pin=${currentSession.pin}`;
-  navigator.clipboard.writeText(link).then(()=>{
+  navigator.clipboard.writeText(`${CONFIG.BASE_URL}/interview.html?pin=${currentSession.pin}`).then(()=>{
     const btn=document.getElementById('copy-btn');btn.textContent='✓ Copied!';btn.classList.add('copied');
     setTimeout(()=>{btn.textContent='Copy link';btn.classList.remove('copied');},2000);
   });
 }
 
-function copyPinLink(pin){
-  navigator.clipboard.writeText(`${CONFIG.BASE_URL}/interview.html?pin=${pin}`).then(()=>toast('Link copied!'));
-}
+function copyPinLink(pin){navigator.clipboard.writeText(`${CONFIG.BASE_URL}/interview.html?pin=${pin}`).then(()=>toast('Link copied!'));}
 
 async function exportMd(){
   if(!currentSession?.pin)return toast('No session selected.');
-  const {content,filename} = await DB.exportSession(currentSession.pin);
+  const{content,filename}=await DB.exportSession(currentSession.pin);
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type:'text/markdown'}));a.download=filename;a.click();
 }
 
@@ -770,23 +836,21 @@ function renderCoAdmins(list){
 }
 async function addCoAdmin(){
   const inp=document.getElementById('coadmin-input');const email=inp.value.trim();if(!email)return;
-  try{
-    const coAdmins=await DB.addCoAdmin(currentSession.pin,email);
-    inp.value='';currentSession.co_admins=coAdmins;renderCoAdmins(coAdmins);toast('Co-admin added');
-  }catch(e){toast('Error: '+e.message);}
+  try{const coAdmins=await DB.addCoAdmin(currentSession.pin,email);inp.value='';currentSession.co_admins=coAdmins;renderCoAdmins(coAdmins);toast('Co-admin added');}
+  catch(e){toast('Error: '+e.message);}
 }
 async function removeCoAdmin(email){
-  const coAdmins=await DB.removeCoAdmin(currentSession.pin,email);
-  currentSession.co_admins=coAdmins;renderCoAdmins(coAdmins);toast('Removed');
+  const coAdmins=await DB.removeCoAdmin(currentSession.pin,email);currentSession.co_admins=coAdmins;renderCoAdmins(coAdmins);toast('Removed');
 }
 
 // ── Create ────────────────────────────────────────────────────
 function resetCreate(){
   ['f-product','f-goal','f-persona','f-url','f-questions'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-  uploadedFiles=[];clarificationHistory=[];clarThreadId=null;interviewPrompt='';publishedPin=null;emailList=[];
+  uploadedFiles=[];clarificationHistory=[];clarThreadId=null;interviewPrompt='';publishedPin=null;emailList=[];mcqAnswers={};
   document.getElementById('flist').innerHTML='';
   document.getElementById('clarif-section').style.display='none';
   document.getElementById('clarif-msgs').innerHTML='';
+  document.getElementById('mcq-area').innerHTML='';
   document.getElementById('clarif-status').textContent='AI is reviewing your materials…';
   document.getElementById('clarif-spin').style.display='none';
   document.getElementById('preview-btn').style.display='none';
@@ -796,6 +860,23 @@ function resetCreate(){
   document.getElementById('clarif-btn').disabled=false;
   document.getElementById('clarif-btn').textContent='Ask AI to review materials';
   updatePreview();
+}
+
+// ── Issue 3: AI improve research goal ─────────────────────────
+async function improveGoal(){
+  const goal=document.getElementById('f-goal').value.trim();
+  const product=document.getElementById('f-product').value.trim();
+  if(!goal)return toast('Type a rough goal first, then click Improve.');
+  const btn=document.getElementById('improve-goal-btn');
+  btn.textContent='Improving…';btn.disabled=true;
+  const prompt=`You are an expert UX research strategist. Improve this research goal to be specific, measurable and actionable. Return ONLY the improved goal text, nothing else.\n\nProduct: ${product||'Not specified'}\nOriginal goal: ${goal}`;
+  try{
+    const r=await SMART.clarify(prompt,[],null,currentUserEmail);
+    document.getElementById('f-goal').value=r.text.trim();
+    updatePreview();
+    toast('✓ Goal improved!');
+  }catch(e){toast('Error: '+e.message);}
+  btn.textContent='✦ Improve with AI';btn.disabled=false;
 }
 
 // ── File Uploads ──────────────────────────────────────────────
@@ -843,19 +924,28 @@ async function startClarification(){
   const product=document.getElementById('f-product').value.trim();
   const goal=document.getElementById('f-goal').value.trim();
   if(!product||!goal)return toast('Please fill in product name and research goal first.');
-
   document.getElementById('clarif-section').style.display='block';
   document.getElementById('clarif-spin').style.display='inline-block';
   document.getElementById('clarif-status').textContent='AI is reviewing your materials…';
   document.getElementById('clarif-btn').disabled=true;
   document.getElementById('clarif-btn').textContent='Reviewing…';
 
+  // Issue 5: ask AI to return structured MCQ format
   const sysPrompt=`You are an expert UX research designer helping set up a user interview study.
-Review the provided research context and ask up to 5 targeted clarifying questions (all at once) to help design the best possible interview.
-Focus on gaps: unclear personas, ambiguous goals, missing context, hypotheses to test.
-Number your questions. After the researcher answers, summarise the interview strategy in 2-3 sentences, then stop.`;
+Review the provided research context and ask exactly 3-5 targeted clarifying questions.
+For each question, provide 3-4 short answer options (max 8 words each).
 
-  const userMsg=`Product: ${product}\nGoal: ${goal}\nPersona: ${document.getElementById('f-persona').value||'Not specified'}\nDuration: ${document.getElementById('f-dur').value} minutes\nFocus: ${selectedFocus.join(', ')}\nFiles: ${uploadedFiles.map(f=>f.name).join(', ')||'None'}\nURL: ${document.getElementById('f-url').value||'None'}\nCustom questions: ${document.getElementById('f-questions').value?'Yes':'None'}\n\nPlease review and ask any clarifying questions.`;
+Return your response in this EXACT format (valid JSON only, no other text):
+{
+  "questions": [
+    {
+      "question": "Question text here?",
+      "options": ["Option A", "Option B", "Option C", "Option D"]
+    }
+  ]
+}`;
+
+  const userMsg=`Product: ${product}\nGoal: ${goal}\nPersona: ${document.getElementById('f-persona').value||'Not specified'}\nDuration: ${document.getElementById('f-dur').value} minutes\nFocus: ${selectedFocus.join(', ')}\nFiles: ${uploadedFiles.map(f=>f.name).join(', ')||'None'}\nURL: ${document.getElementById('f-url').value||'None'}\nCustom questions: ${document.getElementById('f-questions').value?'Yes':'None'}`;
 
   clarificationHistory=[{role:'user',content:userMsg}];
   try{
@@ -864,9 +954,23 @@ Number your questions. After the researcher answers, summarise the interview str
     document.getElementById('clarif-btn').disabled=false;
     document.getElementById('clarif-btn').textContent='Ask AI to review materials';
     clarThreadId=r.threadId||null;
-    clarificationHistory.push({role:'assistant',content:r.text});
-    addClarifMsg('ai',r.text);
-    document.getElementById('clarif-status').textContent='AI has reviewed your materials. Answer any clarifications below, then preview or publish.';
+
+    // Issue 5: try to parse as MCQ JSON, fallback to plain text
+    let parsed=null;
+    try{
+      const jsonStr=r.text.replace(/```json|```/g,'').trim();
+      parsed=JSON.parse(jsonStr);
+    }catch(e){}
+
+    if(parsed?.questions){
+      renderMCQ(parsed.questions);
+      document.getElementById('clarif-status').textContent='Answer the questions below to help AI design the best interview.';
+    }else{
+      // Fallback: render as markdown text
+      clarificationHistory.push({role:'assistant',content:r.text});
+      addClarifMsg('ai',r.text);
+      document.getElementById('clarif-status').textContent='AI has reviewed your materials. Answer any clarifications below, then preview or publish.';
+    }
   }catch(e){
     document.getElementById('clarif-spin').style.display='none';
     document.getElementById('clarif-btn').disabled=false;
@@ -876,22 +980,60 @@ Number your questions. After the researcher answers, summarise the interview str
   }
 }
 
+// Issue 5: render MCQ chips
+function renderMCQ(questions){
+  mcqAnswers={};
+  const area=document.getElementById('mcq-area');
+  area.innerHTML=questions.map((q,qi)=>`
+    <div class="mcq-question">
+      <div class="mcq-q-text">${qi+1}. ${esc(q.question)}</div>
+      <div class="mcq-chips" id="mcq-chips-${qi}">
+        ${q.options.map((opt,oi)=>`<div class="mcq-chip" onclick="selectMCQ(${qi},${oi},this,'${esc(opt)}')">${esc(opt)}</div>`).join('')}
+      </div>
+    </div>
+  `).join('');
+  area.style.marginBottom='12px';
+}
+
+function selectMCQ(qi,oi,el,val){
+  // Toggle selection
+  const chips=document.querySelectorAll(`#mcq-chips-${qi} .mcq-chip`);
+  chips.forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  mcqAnswers[qi]=val;
+}
+
 async function sendClarification(){
-  const inp=document.getElementById('clarif-input');const text=inp.value.trim();if(!text)return;
-  inp.value='';addClarifMsg('user',text);clarificationHistory.push({role:'user',content:text});
+  // Compile MCQ answers + free text
+  const freeText=document.getElementById('clarif-input').value.trim();
+  const mcqText=Object.entries(mcqAnswers).map(([qi,val])=>`Q${parseInt(qi)+1}: ${val}`).join('\n');
+  const combined=[mcqText,freeText].filter(Boolean).join('\n');
+  if(!combined)return toast('Please select or type an answer first.');
+
+  document.getElementById('clarif-input').value='';
+  document.getElementById('mcq-area').innerHTML='';
+  mcqAnswers={};
+  addClarifMsg('user',combined);
+  clarificationHistory.push({role:'user',content:combined});
   document.getElementById('clarif-spin').style.display='inline-block';
-  const sysPrompt=`You are an expert UX research designer. Continue the clarification. If you have enough info, summarise the interview strategy in 2-3 sentences and stop.`;
+
+  const sysPrompt=`You are an expert UX research designer. Based on the researcher's answers, summarise the interview strategy in 2-3 concise sentences. Be specific about question approach and depth. Then stop.`;
   try{
     const r=await SMART.clarify(sysPrompt,clarificationHistory,clarThreadId,currentUserEmail);
     document.getElementById('clarif-spin').style.display='none';
     if(r.threadId)clarThreadId=r.threadId;
-    clarificationHistory.push({role:'assistant',content:r.text});addClarifMsg('ai',r.text);
+    clarificationHistory.push({role:'assistant',content:r.text});
+    addClarifMsg('ai',r.text);
+    document.getElementById('clarif-status').textContent='AI has reviewed your materials. Click "Looks good — continue" when ready.';
   }catch(e){document.getElementById('clarif-spin').style.display='none';toast('Error: '+e.message);}
 }
 
+// Issue 1 fix: render markdown in clarification messages
 function addClarifMsg(role,text){
-  const el=document.createElement('div');el.className='cm '+role;el.textContent=text;
-  document.getElementById('clarif-msgs').appendChild(el);document.getElementById('clarif-msgs').scrollTop=9999;
+  const el=document.createElement('div');el.className='cm '+role;
+  el.innerHTML=renderMarkdown(text);
+  document.getElementById('clarif-msgs').appendChild(el);
+  document.getElementById('clarif-msgs').scrollTop=9999;
 }
 
 function skipClarification(){
@@ -928,13 +1070,10 @@ async function sendPreview(){
 
 async function runPreviewAI(userMessage,isFirst){
   const sysPrompt=buildInterviewPrompt({
-    product:document.getElementById('f-product').value,
-    goal:document.getElementById('f-goal').value,
-    persona:document.getElementById('f-persona').value,
-    duration_mins:document.getElementById('f-dur').value,
+    product:document.getElementById('f-product').value,goal:document.getElementById('f-goal').value,
+    persona:document.getElementById('f-persona').value,duration_mins:document.getElementById('f-dur').value,
     total_questions:Math.round((parseInt(document.getElementById('f-dur').value)||7)/7*8)+2,
-    focus:selectedFocus,language:'English',
-    interview_prompt:interviewPrompt,
+    focus:selectedFocus,language:'English',interview_prompt:interviewPrompt,
     custom_questions:document.getElementById('f-questions').value,
   },'Preview User','Researcher','English');
   addPreviewBubble('ai','…',true);
@@ -948,21 +1087,23 @@ async function runPreviewAI(userMessage,isFirst){
   }catch(e){removeTypingBubble();addPreviewBubble('ai','Error: '+e.message);}
 }
 
+// Issue 6 fix: render markdown in preview bubbles
 function addPreviewBubble(role,text,isTyping=false){
   const chat=document.getElementById('preview-chat');
   const row=document.createElement('div');row.className='preview-row '+role;
   if(isTyping)row.id='typing-bubble';
   row.innerHTML=`<div class="preview-av ${role}">${role==='ai'?'AI':'Y'}</div><div class="pb ${role}">${
-    isTyping?'<div class="typing-wrap"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div><span class="typing-lbl">Thinking…</span></div>':esc(text)
+    isTyping?'<div class="typing-wrap"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div><span class="typing-lbl">Thinking…</span></div>':renderMarkdown(text)
   }</div>`;
   chat.appendChild(row);chat.scrollTop=chat.scrollHeight;
 }
 function removeTypingBubble(){const el=document.getElementById('typing-bubble');if(el)el.remove();}
 
+// Issue 7: tighter interview prompt, no emojis
 function buildInterviewPrompt(session,pName,pRole,language){
   const totalQ=parseInt(session.total_questions)||8;
   const focus=Array.isArray(session.focus)?session.focus.join(', '):session.focus;
-  return `You are a warm, expert UX researcher conducting a structured user research interview.\n\nPARTICIPANT: ${pName}, role: ${pRole}\nPRODUCT: ${session.product||'[Product]'}\nGOAL: ${session.goal||'[Goal]'}\nFOCUS: ${focus}\nTARGET EXCHANGES: ${totalQ}\nLANGUAGE: ${language}\n${session.custom_questions?'\nQUESTIONS:\n'+session.custom_questions:''}\n${session.interview_prompt?'\nSTRATEGY:\n'+session.interview_prompt:''}\n\nRULES:\n- ONE question per message\n- Warm, empathetic, curious\n- After exactly ${totalQ} participant responses, output ONLY: [SESSION_COMPLETE]\n\nStart: greet ${pName}, explain ~${session.duration_mins} min session about ${session.product||'the product'}, then ask your first question.`;
+  return `You are a professional UX researcher conducting a structured user research interview.\n\nPARTICIPANT: ${pName}, role: ${pRole}\nPRODUCT: ${session.product||'[Product]'}\nGOAL: ${session.goal||'[Goal]'}\nFOCUS: ${focus}\nTARGET EXCHANGES: ${totalQ}\nLANGUAGE: ${language}\n${session.custom_questions?'\nQUESTIONS:\n'+session.custom_questions:''}\n${session.interview_prompt?'\nSTRATEGY:\n'+session.interview_prompt:''}\n\nRULES:\n- ONE question per message only\n- Warm and professional — no emojis\n- Keep opening greeting to 2 sentences maximum\n- After exactly ${totalQ} participant responses, say a warm 1-sentence thank you to ${pName} by name, then on a new line output only: [SESSION_COMPLETE]\n\nStart: greet ${pName} briefly (max 2 sentences), then ask your first question immediately.`;
 }
 
 // ── Publish ───────────────────────────────────────────────────
@@ -972,7 +1113,6 @@ async function publishSession(){
   if(!product||!goal)return toast('Product name and goal are required.');
   const btn=document.getElementById('publish-btn');btn.disabled=true;btn.textContent='Creating…';
   try{
-    // Upload files to Supabase Storage
     let fileIds=[];
     for(const f of uploadedFiles){
       const r=await DB.uploadFile(f.base64,f.mimeType,f.name);
@@ -1013,25 +1153,36 @@ function renderEmailTags(){
 async function sendInviteEmails(){
   if(!publishedPin)return toast('Publish first.');
   if(!emailList.length)return toast('Add at least one email.');
-  // Simple mailto fallback — email sending requires a backend
   const link=`${CONFIG.BASE_URL}/interview.html?pin=${publishedPin}`;
   const subject=encodeURIComponent(`Research invitation — PIN: ${publishedPin}`);
-  const body=encodeURIComponent(`Hi,\n\nYou've been invited to share feedback. Use PIN: ${publishedPin}\n\nClick here to start: ${link}\n\nThank you!`);
+  const body=encodeURIComponent(`Hi,\n\nYou've been invited to share feedback.\n\nPIN: ${publishedPin}\nLink: ${link}\n\nThank you!`);
   window.open(`mailto:${emailList.join(',')}?subject=${subject}&body=${body}`);
-  toast('Email client opened with '+emailList.length+' recipients');
+  toast('Email client opened');
 }
 
-// ── Preview sync ──────────────────────────────────────────────
+// ── Issue 4: Focus tag max 3 ──────────────────────────────────
 function initFocusTags(){
   document.querySelectorAll('#focus-tags .tag').forEach(t=>{
     t.addEventListener('click',()=>{
+      if(t.classList.contains('disabled'))return;
       t.classList.toggle('on');const v=t.dataset.v;
       selectedFocus=t.classList.contains('on')?[...selectedFocus,v]:selectedFocus.filter(x=>x!==v);
+      // Enforce max 3
+      if(selectedFocus.length>=3){
+        document.querySelectorAll('#focus-tags .tag:not(.on)').forEach(u=>u.classList.add('disabled'));
+      }else{
+        document.querySelectorAll('#focus-tags .tag').forEach(u=>u.classList.remove('disabled'));
+      }
+      const counter=document.getElementById('focus-counter');
+      counter.textContent=`${selectedFocus.length} / 3 selected`;
+      counter.className='focus-counter'+(selectedFocus.length>=3?' maxed':'');
       updatePreview();
     });
   });
 }
+
 function initPreviewSync(){['f-product','f-goal','f-dur','f-lang'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('input',updatePreview);});}
+
 function updatePreview(){
   document.getElementById('prev-product').textContent=document.getElementById('f-product').value||'—';
   const goal=document.getElementById('f-goal').value;
