@@ -10,13 +10,14 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#f5f2ed;--sf:#fff;--s2:#f0ece4;
+  --bg:#f5f2ed;--sf:#fff;--s2:#f0ece4;--s3:#ebe6dc;
   --ink:#1a1814;--ink2:#5a5650;--ink3:#9a9590;
   --border:#e2ddd4;--accent:#2d6a4f;--adim:rgba(45,106,79,0.1);--aborder:rgba(45,106,79,0.25);
   --error:#c0392b;--r:14px;
 }
 body{font-family:'Instrument Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;position:relative;overflow-x:hidden;}
 body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 70% 50% at 15% 10%,rgba(45,106,79,0.07) 0%,transparent 55%),radial-gradient(ellipse 60% 40% at 85% 85%,rgba(212,162,76,0.06) 0%,transparent 50%);pointer-events:none;}
+/* Lang bar */
 .lang-bar{position:fixed;top:14px;right:16px;z-index:100;}
 .lbtn{display:flex;align-items:center;gap:6px;background:var(--sf);border:1px solid var(--border);border-radius:24px;padding:6px 12px 6px 10px;font-size:12px;font-family:'Instrument Sans',sans-serif;color:var(--ink2);cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,0.07);}
 .ldd{position:absolute;top:calc(100% + 8px);right:0;background:var(--sf);border:1px solid var(--border);border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.12);overflow:hidden;min-width:185px;z-index:200;display:none;}
@@ -24,8 +25,9 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .lopt{display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;cursor:pointer;transition:background 0.15s;color:var(--ink);}
 .lopt:hover{background:var(--bg);}
 .lopt.on{color:var(--accent);font-weight:600;}
-.card{background:var(--sf);border-radius:20px;border:1px solid var(--border);box-shadow:0 2px 2px rgba(0,0,0,0.04),0 12px 48px rgba(0,0,0,0.08);width:100%;max-width:460px;position:relative;z-index:10;overflow:hidden;transition:max-width 0.3s ease;}
-.card.wide{max-width:620px;}
+/* Card */
+.card{background:var(--sf);border-radius:20px;border:1px solid var(--border);box-shadow:0 2px 2px rgba(0,0,0,0.04),0 12px 48px rgba(0,0,0,0.08);width:100%;max-width:480px;position:relative;z-index:10;overflow:hidden;transition:max-width 0.3s ease;}
+.card.wide{max-width:640px;}
 .card-top{padding:30px 32px 24px;border-bottom:1px solid var(--border);background:linear-gradient(155deg,#fff 55%,rgba(45,106,79,0.04));}
 .brand{display:flex;align-items:center;gap:8px;margin-bottom:20px;}
 .bmark{width:24px;height:24px;border-radius:6px;background:var(--accent);display:flex;align-items:center;justify-content:center;}
@@ -35,6 +37,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .card-title em{font-style:italic;color:var(--accent);}
 .card-sub{font-size:13.5px;color:var(--ink2);line-height:1.55;}
 .card-body{padding:24px 32px 28px;}
+/* Fields */
 .field{margin-bottom:16px;}
 .field label{display:block;font-size:11px;font-weight:600;letter-spacing:0.7px;text-transform:uppercase;color:var(--ink3);margin-bottom:6px;}
 .field input,.field select{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Instrument Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--bg);outline:none;transition:border-color 0.2s;appearance:none;}
@@ -44,12 +47,12 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .ferr.show{display:block;}
 .selwrap{position:relative;}
 .selwrap::after{content:'▾';position:absolute;right:13px;top:50%;transform:translateY(-50%);color:var(--ink3);pointer-events:none;font-size:11px;}
-/* PIN — Issue 3 fix: keyup based auto-advance */
+/* PIN inputs */
 .pin-row{display:flex;gap:9px;justify-content:center;margin:4px 0 6px;}
 .pd{width:52px;height:60px;border:1.5px solid var(--border);border-radius:11px;font-family:'Fraunces',serif;font-size:28px;font-weight:400;text-align:center;color:var(--ink);background:var(--bg);outline:none;transition:border-color 0.2s,box-shadow 0.2s;caret-color:var(--accent);-webkit-appearance:none;appearance:none;}
 .pd:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(45,106,79,0.1);background:white;}
 .pd.filled{border-color:var(--ink3);background:white;}
-.pd.err{border-color:var(--error) !important;animation:shake 0.4s ease;}
+.pd.err{border-color:var(--error)!important;animation:shake 0.4s ease;}
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
 .cta{width:100%;padding:13px;background:var(--accent);color:white;border:none;border-radius:10px;font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:14px;cursor:pointer;transition:all 0.2s;margin-top:6px;display:flex;align-items:center;justify-content:center;gap:8px;}
 .cta:hover{background:#235a41;transform:translateY(-1px);box-shadow:0 4px 16px rgba(45,106,79,0.25);}
@@ -58,16 +61,20 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .cta.loading .lbl{display:none;}.cta.loading .sp{display:block;}
 @keyframes spin{to{transform:rotate(360deg)}}
 .hint{font-size:12px;color:var(--ink3);text-align:center;margin-top:12px;}
-/* Issue 4 fix: pin error message styles */
 .pin-error{font-size:13px;color:var(--error);text-align:center;margin-top:8px;display:none;font-weight:500;}
 .pin-error.show{display:block;}
+/* Screens */
 .screen{display:none;}
 .screen.on{display:block;animation:fu 0.3s ease;}
 @keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes fadeOut{from{opacity:1}to{opacity:0;transform:translateY(-8px)}}
+.screen.fading{animation:fadeOut 0.4s ease forwards;}
+/* Loading */
 .load-wrap{text-align:center;padding:44px 32px;}
 .lspin{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 14px;}
 .ltxt{font-size:14px;color:var(--ink2);}
-.chat-hdr{display:flex;align-items:center;gap:10px;padding:13px 32px;background:rgba(45,106,79,0.06);border-bottom:1px solid var(--border);}
+/* Interview header */
+.chat-hdr{display:flex;align-items:center;gap:10px;padding:13px 24px;background:rgba(45,106,79,0.06);border-bottom:1px solid var(--border);}
 .ldot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 2s ease-in-out infinite;flex-shrink:0;}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
 .chat-hdr-txt{font-size:13px;color:var(--accent);font-weight:600;}
@@ -75,13 +82,29 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .prog-track{width:80px;height:3px;background:var(--border);border-radius:2px;overflow:hidden;}
 .prog-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.5s;}
 .prog-lbl{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--ink3);}
-.mstrip-wrap{display:none;}
-.mstrip{display:flex;gap:7px;padding:9px 32px;border-bottom:1px solid var(--border);background:var(--s2);overflow-x:auto;}
-.mthumb{width:60px;height:42px;object-fit:cover;border-radius:6px;border:1.5px solid var(--border);cursor:pointer;flex-shrink:0;transition:border-color 0.15s;}
-.mthumb.on{border-color:var(--accent);}
-.mprev{display:none;padding:0 32px 9px;background:var(--s2);border-bottom:1px solid var(--border);}
-.mprev img{width:100%;max-height:160px;object-fit:contain;border-radius:8px;}
-.chat-msgs{max-height:340px;overflow-y:auto;padding:16px 32px;display:flex;flex-direction:column;gap:11px;}
+/* Issue 13: Image carousel */
+.carousel-wrap{display:none;border-bottom:1px solid var(--border);background:var(--s2);}
+.carousel-main{position:relative;width:100%;height:220px;overflow:hidden;cursor:zoom-in;}
+.carousel-main img{width:100%;height:100%;object-fit:contain;display:block;}
+.carousel-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.9);border:1px solid var(--border);border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--ink2);transition:all 0.15s;box-shadow:0 1px 6px rgba(0,0,0,0.1);}
+.carousel-nav:hover{background:white;box-shadow:0 2px 10px rgba(0,0,0,0.15);}
+.carousel-nav.prev{left:10px;}
+.carousel-nav.next{right:10px;}
+.carousel-nav.hidden{display:none;}
+.carousel-footer{display:flex;align-items:center;justify-content:center;gap:12px;padding:8px 0;}
+.carousel-dots{display:flex;gap:5px;}
+.cdot{width:6px;height:6px;border-radius:50%;background:var(--border);transition:background 0.2s;}
+.cdot.on{background:var(--accent);}
+.carousel-enlarge{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,0.5);color:white;border:none;border-radius:6px;padding:4px 9px;font-size:11px;cursor:pointer;transition:background 0.15s;}
+.carousel-enlarge:hover{background:rgba(0,0,0,0.75);}
+/* Lightbox */
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:1000;display:none;align-items:center;justify-content:center;cursor:zoom-out;}
+.lightbox.open{display:flex;}
+.lightbox img{max-width:95vw;max-height:92vh;object-fit:contain;border-radius:8px;}
+.lightbox-close{position:fixed;top:16px;right:20px;background:rgba(255,255,255,0.15);color:white;border:none;border-radius:50%;width:36px;height:36px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.lightbox-close:hover{background:rgba(255,255,255,0.25);}
+/* Chat */
+.chat-msgs{max-height:340px;overflow-y:auto;padding:16px 24px;display:flex;flex-direction:column;gap:11px;}
 .chat-msgs::-webkit-scrollbar{width:3px;}
 .chat-msgs::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
 .bubble{display:flex;gap:9px;animation:fu 0.22s ease;}
@@ -89,29 +112,50 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .bav{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
 .bubble.ai .bav{background:var(--accent);color:white;}
 .bubble.user .bav{background:var(--border);color:var(--ink2);}
-.btxt{padding:10px 13px;border-radius:14px;font-size:13.5px;line-height:1.6;max-width:340px;}
+.btxt{padding:10px 13px;border-radius:14px;font-size:13.5px;line-height:1.6;max-width:360px;}
 .bubble.ai .btxt{background:var(--s2);border:1px solid var(--border);border-bottom-left-radius:4px;}
 .bubble.user .btxt{background:var(--accent);color:white;border-bottom-right-radius:4px;}
+/* Markdown in chat */
+.btxt strong{font-weight:600;}
+.btxt em{font-style:italic;}
+.btxt ul,.btxt ol{padding-left:16px;margin:4px 0;}
+.btxt li{margin-bottom:3px;}
+/* Typing indicator */
 .typing-wrap{display:flex;align-items:center;gap:8px;padding:9px 13px;}
 .tdot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:td 1.4s ease-in-out infinite;flex-shrink:0;}
 .tdot:nth-child(2){animation-delay:0.25s;}.tdot:nth-child(3){animation-delay:0.5s;}
 .typing-label{font-size:12px;color:var(--ink3);font-style:italic;animation:tfade 2.5s ease-in-out infinite;}
 @keyframes tfade{0%,100%{opacity:0.5}50%{opacity:1}}
 @keyframes td{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
-.input-row{display:flex;gap:8px;padding:12px 32px 16px;border-top:1px solid var(--border);background:white;}
+/* Input row */
+.input-row{display:flex;gap:8px;padding:12px 24px 16px;border-top:1px solid var(--border);background:white;}
 .cinput{flex:1;border:1.5px solid var(--border);border-radius:10px;padding:10px 13px;font-family:'Instrument Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--bg);outline:none;resize:none;max-height:90px;min-height:42px;line-height:1.45;transition:border-color 0.2s;}
 .cinput:focus{border-color:var(--accent);background:white;}
 .cinput:disabled{opacity:0.4;cursor:not-allowed;}
 .sbtn{width:42px;height:42px;background:var(--accent);border:none;border-radius:10px;color:white;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;}
 .sbtn:hover{background:#235a41;}
 .sbtn:disabled{opacity:0.3;cursor:not-allowed;}
+/* Thank you */
 .ty-wrap{text-align:center;padding:10px 0 4px;}
 .ty-icon{font-size:50px;display:block;margin-bottom:15px;animation:pop 0.5s cubic-bezier(0.34,1.56,0.64,1);}
 @keyframes pop{from{transform:scale(0.3);opacity:0}to{transform:scale(1);opacity:1}}
 .ty-title{font-family:'Fraunces',serif;font-size:25px;font-weight:300;letter-spacing:-0.6px;margin-bottom:9px;}
-.ty-msg{font-size:14px;color:var(--ink2);line-height:1.6;max-width:300px;margin:0 auto;}
-.ty-div{border:none;border-top:1px solid var(--border);margin:20px 0 16px;}
-.ty-meta{font-size:12px;color:var(--ink3);font-style:italic;}
+.ty-msg{font-size:14px;color:var(--ink2);line-height:1.6;max-width:300px;margin:0 auto 20px;}
+/* Issue 14: feedback stars */
+.feedback-section{border-top:1px solid var(--border);padding-top:20px;margin-top:4px;}
+.feedback-label{font-size:13px;font-weight:600;color:var(--ink2);margin-bottom:12px;text-align:center;}
+.stars{display:flex;justify-content:center;gap:8px;margin-bottom:14px;}
+.star{font-size:32px;cursor:pointer;opacity:0.3;transition:all 0.15s;user-select:none;}
+.star.on{opacity:1;}
+.star:hover{transform:scale(1.15);}
+.feedback-text{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'Instrument Sans',sans-serif;font-size:13px;color:var(--ink);background:var(--bg);outline:none;resize:none;min-height:70px;transition:border-color 0.2s;}
+.feedback-text:focus{border-color:var(--accent);background:white;}
+.feedback-submit{width:100%;padding:11px;background:var(--accent);color:white;border:none;border-radius:10px;font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:13px;cursor:pointer;margin-top:10px;transition:all 0.2s;}
+.feedback-submit:hover{background:#235a41;}
+.feedback-submit:disabled{opacity:0.4;cursor:not-allowed;}
+.feedback-done{font-size:13px;color:var(--ink3);text-align:center;margin-top:10px;display:none;}
+.ty-meta{font-size:12px;color:var(--ink3);font-style:italic;margin-top:16px;}
+/* Error */
 .err-wrap{text-align:center;padding:10px 0;}
 .err-icon{font-size:38px;margin-bottom:13px;opacity:0.45;}
 .err-title{font-family:'Fraunces',serif;font-size:19px;font-weight:300;margin-bottom:7px;}
@@ -123,9 +167,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 <!-- LANG -->
 <div class="lang-bar">
   <div style="position:relative" id="lang-wrap">
-    <button class="lbtn" id="lbtn">
-      <span id="lflag">🌐</span><span id="llbl">English</span><span style="font-size:9px;opacity:0.5">▾</span>
-    </button>
+    <button class="lbtn" id="lbtn"><span id="lflag">🌐</span><span id="llbl">English</span><span style="font-size:9px;opacity:0.5">▾</span></button>
     <div class="ldd" id="ldd">
       <div class="lopt" data-code="en" data-label="English" data-flag="🌐">🇸🇬 English</div>
       <div class="lopt" data-code="id" data-label="Bahasa Indonesia" data-flag="🇮🇩">🇮🇩 Bahasa Indonesia</div>
@@ -138,6 +180,12 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   </div>
 </div>
 
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
 <div class="card" id="card">
   <!-- ENTRY -->
   <div class="screen on" id="s-entry">
@@ -147,41 +195,35 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <div class="card-sub" id="t-sub">This is a short research session. Your honest feedback helps us build better products.</div>
     </div>
     <div class="card-body">
-      <div class="field">
-        <label id="t-lname">Your name</label>
-        <input type="text" id="i-name" autocomplete="given-name">
-        <div class="ferr" id="e-name">Please enter your name.</div>
-      </div>
-      <div class="field">
-        <label id="t-lrole">Your role</label>
-        <div class="selwrap">
-          <select id="i-role">
-            <option value="">Select your role…</option>
-            <option>Ops Lead</option><option>Ops Executive</option><option>Supervisor</option>
-            <option>Team Lead</option><option>Driver / Rider</option><option>Warehouse Staff</option>
-            <option>Customer Service</option><option>Product Manager</option><option>Engineer</option><option>Other</option>
-          </select>
-        </div>
-        <div class="ferr" id="e-role">Please select your role.</div>
-      </div>
-      <div class="field">
-        <label id="t-lpin">Research PIN (6 digits)</label>
-        <!-- Issue 3 fix: keyup + oninput for reliable auto-advance -->
+      <div class="field"><label id="t-lname">Your name</label><input type="text" id="i-name" autocomplete="given-name"></div>
+      <div class="field"><label id="t-lrole">Your role</label><div class="selwrap"><select id="i-role">
+        <option value="">Select your role…</option>
+        <option>Ops Lead</option><option>Ops Executive</option><option>Supervisor</option>
+        <option>Team Lead</option><option>Driver / Rider</option><option>Warehouse Staff</option>
+        <option>Customer Service</option><option>Product Manager</option><option>Engineer</option><option>Other</option>
+      </select></div><div class="ferr" id="e-role">Please select your role.</div></div>
+      <!-- Issue 9: Market dropdown -->
+      <div class="field"><label id="t-lmarket">Your market</label><div class="selwrap"><select id="i-market">
+        <option value="">Select your market…</option>
+        <option value="SG">🇸🇬 Singapore (SG)</option>
+        <option value="MY">🇲🇾 Malaysia (MY)</option>
+        <option value="ID">🇮🇩 Indonesia (ID)</option>
+        <option value="VN">🇻🇳 Vietnam (VN)</option>
+        <option value="TH">🇹🇭 Thailand (TH)</option>
+        <option value="PH">🇵🇭 Philippines (PH)</option>
+        <option value="TW">🇹🇼 Taiwan (TW)</option>
+        <option value="BR">🇧🇷 Brazil (BR)</option>
+        <option value="Regional">🌏 Regional</option>
+      </select></div><div class="ferr" id="e-market">Please select your market.</div></div>
+      <div class="field"><label id="t-lpin">Research PIN (6 digits)</label>
         <div class="pin-row">
-          <input class="pd" id="p0" maxlength="1" type="tel" inputmode="numeric" pattern="[0-9]*"
-            onkeyup="pinKeyUp(event,0)" oninput="pinInput(this,0)" onkeydown="pinKeyDown(event,0)" onpaste="pinPaste(event)">
-          <input class="pd" id="p1" maxlength="1" type="tel" inputmode="numeric" pattern="[0-9]*"
-            onkeyup="pinKeyUp(event,1)" oninput="pinInput(this,1)" onkeydown="pinKeyDown(event,1)">
-          <input class="pd" id="p2" maxlength="1" type="tel" inputmode="numeric" pattern="[0-9]*"
-            onkeyup="pinKeyUp(event,2)" oninput="pinInput(this,2)" onkeydown="pinKeyDown(event,2)">
-          <input class="pd" id="p3" maxlength="1" type="tel" inputmode="numeric" pattern="[0-9]*"
-            onkeyup="pinKeyUp(event,3)" oninput="pinInput(this,3)" onkeydown="pinKeyDown(event,3)">
-          <input class="pd" id="p4" maxlength="1" type="tel" inputmode="numeric" pattern="[0-9]*"
-            onkeyup="pinKeyUp(event,4)" oninput="pinInput(this,4)" onkeydown="pinKeyDown(event,4)">
-          <input class="pd" id="p5" maxlength="1" type="tel" inputmode="numeric" pattern="[0-9]*"
-            onkeyup="pinKeyUp(event,5)" oninput="pinInput(this,5)" onkeydown="pinKeyDown(event,5)">
+          <input class="pd" id="p0" maxlength="1" type="tel" inputmode="numeric" pattern="[0-9]*" onkeyup="pinKeyUp(event,0)" oninput="pinInput(this,0)" onkeydown="pinKeyDown(event,0)" onpaste="pinPaste(event)">
+          <input class="pd" id="p1" maxlength="1" type="tel" inputmode="numeric" pattern="[0-9]*" onkeyup="pinKeyUp(event,1)" oninput="pinInput(this,1)" onkeydown="pinKeyDown(event,1)">
+          <input class="pd" id="p2" maxlength="1" type="tel" inputmode="numeric" pattern="[0-9]*" onkeyup="pinKeyUp(event,2)" oninput="pinInput(this,2)" onkeydown="pinKeyDown(event,2)">
+          <input class="pd" id="p3" maxlength="1" type="tel" inputmode="numeric" pattern="[0-9]*" onkeyup="pinKeyUp(event,3)" oninput="pinInput(this,3)" onkeydown="pinKeyDown(event,3)">
+          <input class="pd" id="p4" maxlength="1" type="tel" inputmode="numeric" pattern="[0-9]*" onkeyup="pinKeyUp(event,4)" oninput="pinInput(this,4)" onkeydown="pinKeyDown(event,4)">
+          <input class="pd" id="p5" maxlength="1" type="tel" inputmode="numeric" pattern="[0-9]*" onkeyup="pinKeyUp(event,5)" oninput="pinInput(this,5)" onkeydown="pinKeyDown(event,5)">
         </div>
-        <!-- Issue 4 fix: clear visible error message for wrong PIN -->
         <div class="pin-error" id="pin-error"></div>
       </div>
       <button class="cta" id="entry-btn" onclick="validateEntry()">
@@ -206,9 +248,17 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <div class="prog-lbl" id="prog-lbl">0%</div>
       </div>
     </div>
-    <div class="mstrip-wrap" id="mstrip-wrap">
-      <div class="mstrip" id="mstrip"></div>
-      <div class="mprev" id="mprev"><img id="mprev-img" src="" alt=""></div>
+    <!-- Issue 13: Carousel -->
+    <div class="carousel-wrap" id="carousel-wrap">
+      <div class="carousel-main" id="carousel-main" onclick="openLightbox()">
+        <img id="carousel-img" src="" alt="Mockup">
+        <button class="carousel-nav prev" id="carousel-prev" onclick="event.stopPropagation();carouselNav(-1)">‹</button>
+        <button class="carousel-nav next" id="carousel-next" onclick="event.stopPropagation();carouselNav(1)">›</button>
+        <button class="carousel-enlarge" onclick="event.stopPropagation();openLightbox()">🔍 Enlarge</button>
+      </div>
+      <div class="carousel-footer">
+        <div class="carousel-dots" id="carousel-dots"></div>
+      </div>
     </div>
     <div class="chat-msgs" id="chat-msgs"></div>
     <div class="input-row">
@@ -217,15 +267,28 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     </div>
   </div>
 
-  <!-- THANK YOU -->
+  <!-- THANK YOU + Issue 14: Feedback -->
   <div class="screen" id="s-ty">
     <div class="card-body" style="padding-top:34px;padding-bottom:34px;">
       <div class="ty-wrap">
         <span class="ty-icon">🙏</span>
-        <div class="ty-title">Thank you so much.</div>
-        <div class="ty-msg">Your feedback has been recorded and will directly shape the product. We really appreciate your time today.</div>
-        <hr class="ty-div">
-        <div class="ty-meta">You may close this window.</div>
+        <div class="ty-title" id="ty-title">Thank you so much.</div>
+        <div class="ty-msg" id="ty-msg">Your feedback has been recorded and will directly shape the product. We really appreciate your time today.</div>
+        <!-- Issue 14: Star rating + open text -->
+        <div class="feedback-section">
+          <div class="feedback-label" id="ty-feedback-lbl">How was your experience with this interview?</div>
+          <div class="stars" id="stars">
+            <span class="star" data-v="1" onclick="selectStar(1)">★</span>
+            <span class="star" data-v="2" onclick="selectStar(2)">★</span>
+            <span class="star" data-v="3" onclick="selectStar(3)">★</span>
+            <span class="star" data-v="4" onclick="selectStar(4)">★</span>
+            <span class="star" data-v="5" onclick="selectStar(5)">★</span>
+          </div>
+          <textarea class="feedback-text" id="feedback-text" placeholder="Any comments? (optional)"></textarea>
+          <button class="feedback-submit" id="feedback-submit" onclick="submitFeedback()" disabled>Submit feedback</button>
+          <div class="feedback-done" id="feedback-done">✓ Thank you for your feedback!</div>
+        </div>
+        <div class="ty-meta" id="t-meta">You may close this window.</div>
       </div>
     </div>
   </div>
@@ -245,16 +308,16 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 <script>
 // ── Translations ──────────────────────────────────────────────
 const T={
-  en:{title:"Welcome.<br><em>Let's get started.</em>",sub:"This is a short research session. Your honest feedback helps us build better products.",lname:"Your name",lrole:"Your role",lpin:"Research PIN (6 digits)",btn:"Begin Session →",hint:"Your 6-digit PIN was sent with your research invite.",load:"Setting up your session…",live:"Session in progress",ph:"Type your response…",tyTitle:"Thank you so much.",tyMsg:"Your feedback has been recorded.",tyMeta:"You may close this window.",ci:"English"},
-  id:{title:"Selamat datang.<br><em>Mari kita mulai.</em>",sub:"Sesi riset singkat. Masukan Anda membantu kami.",lname:"Nama Anda",lrole:"Peran Anda",lpin:"PIN Riset (6 digit)",btn:"Mulai Sesi →",hint:"PIN dikirim bersama undangan riset.",load:"Menyiapkan sesi…",live:"Sesi berlangsung",ph:"Ketik jawaban…",tyTitle:"Terima kasih banyak.",tyMsg:"Masukan Anda telah dicatat.",tyMeta:"Anda boleh menutup jendela ini.",ci:"Bahasa Indonesia"},
-  vi:{title:"Chào mừng.<br><em>Hãy bắt đầu nào.</em>",sub:"Phiên nghiên cứu ngắn.",lname:"Tên của bạn",lrole:"Vai trò",lpin:"Mã PIN (6 chữ số)",btn:"Bắt đầu →",hint:"Mã PIN được gửi kèm thư mời.",load:"Đang chuẩn bị…",live:"Phiên đang diễn ra",ph:"Nhập câu trả lời…",tyTitle:"Cảm ơn rất nhiều.",tyMsg:"Phản hồi của bạn đã được ghi lại.",tyMeta:"Bạn có thể đóng cửa sổ.",ci:"Tiếng Việt"},
-  th:{title:"ยินดีต้อนรับ<br><em>มาเริ่มกันเลย</em>",sub:"เซสชันวิจัยสั้นๆ",lname:"ชื่อของคุณ",lrole:"บทบาท",lpin:"PIN (6 หลัก)",btn:"เริ่มเซสชัน →",hint:"PIN ถูกส่งพร้อมคำเชิญ",load:"กำลังตั้งค่า…",live:"เซสชันดำเนินอยู่",ph:"พิมพ์คำตอบ…",tyTitle:"ขอบคุณมากๆ",tyMsg:"ข้อเสนอแนะของคุณถูกบันทึกแล้ว",tyMeta:"คุณสามารถปิดหน้าต่างนี้ได้",ci:"ภาษาไทย"},
-  tl:{title:"Maligayang pagdating.<br><em>Magsimula na tayo.</em>",sub:"Maikling research session.",lname:"Pangalan mo",lrole:"Tungkulin mo",lpin:"Research PIN (6 digits)",btn:"Simulan →",hint:"Ang PIN ay ipinadala kasama ang invite.",load:"Inihahanda…",live:"Session in progress",ph:"I-type ang sagot…",tyTitle:"Maraming salamat.",tyMsg:"Naitala na ang iyong feedback.",tyMeta:"Maaari mong isara ang window.",ci:"Filipino"},
-  pt:{title:"Bem-vindo.<br><em>Vamos começar.</em>",sub:"Sessão de pesquisa curta.",lname:"Seu nome",lrole:"Seu cargo",lpin:"PIN da pesquisa (6 dígitos)",btn:"Iniciar →",hint:"O PIN foi enviado com o convite.",load:"Configurando…",live:"Sessão em andamento",ph:"Digite sua resposta…",tyTitle:"Muito obrigado.",tyMsg:"Seu feedback foi registrado.",tyMeta:"Você pode fechar esta janela.",ci:"Português (Brasileiro)"},
-  zh:{title:"欢迎。<br><em>让我们开始吧。</em>",sub:"简短的研究会话。",lname:"您的姓名",lrole:"您的职位",lpin:"研究PIN码（6位）",btn:"开始会话 →",hint:"PIN码已随邀请发送。",load:"正在设置…",live:"会话进行中",ph:"输入您的回答…",tyTitle:"非常感谢。",tyMsg:"您的反馈已被记录。",tyMeta:"您可以关闭此窗口。",ci:"中文"},
+  en:{title:"Welcome.<br><em>Let's get started.</em>",sub:"This is a short research session. Your honest feedback helps us build better products.",lname:"Your name",lrole:"Your role",lmarket:"Your market",lpin:"Research PIN (6 digits)",btn:"Begin Session →",hint:"Your 6-digit PIN was sent with your research invite.",load:"Setting up your session…",live:"Session in progress",ph:"Type your response…",tyTitle:"Thank you so much.",tyMsg:"Your feedback has been recorded and will directly shape the product. We really appreciate your time today.",tyFeedback:"How was your experience with this interview?",tyMeta:"You may close this window.",ci:"English"},
+  id:{title:"Selamat datang.<br><em>Mari kita mulai.</em>",sub:"Sesi riset singkat. Masukan Anda membantu kami.",lname:"Nama Anda",lrole:"Peran Anda",lmarket:"Pasar Anda",lpin:"PIN Riset (6 digit)",btn:"Mulai Sesi →",hint:"PIN dikirim bersama undangan riset.",load:"Menyiapkan sesi…",live:"Sesi berlangsung",ph:"Ketik jawaban…",tyTitle:"Terima kasih banyak.",tyMsg:"Masukan Anda telah dicatat.",tyFeedback:"Bagaimana pengalaman Anda dengan wawancara ini?",tyMeta:"Anda boleh menutup jendela ini.",ci:"Bahasa Indonesia"},
+  vi:{title:"Chào mừng.<br><em>Hãy bắt đầu nào.</em>",sub:"Phiên nghiên cứu ngắn.",lname:"Tên của bạn",lrole:"Vai trò",lmarket:"Thị trường",lpin:"Mã PIN (6 chữ số)",btn:"Bắt đầu →",hint:"Mã PIN được gửi kèm thư mời.",load:"Đang chuẩn bị…",live:"Phiên đang diễn ra",ph:"Nhập câu trả lời…",tyTitle:"Cảm ơn rất nhiều.",tyMsg:"Phản hồi của bạn đã được ghi lại.",tyFeedback:"Trải nghiệm của bạn với cuộc phỏng vấn này như thế nào?",tyMeta:"Bạn có thể đóng cửa sổ.",ci:"Tiếng Việt"},
+  th:{title:"ยินดีต้อนรับ<br><em>มาเริ่มกันเลย</em>",sub:"เซสชันวิจัยสั้นๆ",lname:"ชื่อของคุณ",lrole:"บทบาท",lmarket:"ตลาดของคุณ",lpin:"PIN (6 หลัก)",btn:"เริ่มเซสชัน →",hint:"PIN ถูกส่งพร้อมคำเชิญ",load:"กำลังตั้งค่า…",live:"เซสชันดำเนินอยู่",ph:"พิมพ์คำตอบ…",tyTitle:"ขอบคุณมากๆ",tyMsg:"ข้อเสนอแนะของคุณถูกบันทึกแล้ว",tyFeedback:"ประสบการณ์ของคุณกับการสัมภาษณ์นี้เป็นอย่างไร?",tyMeta:"คุณสามารถปิดหน้าต่างนี้ได้",ci:"ภาษาไทย"},
+  tl:{title:"Maligayang pagdating.<br><em>Magsimula na tayo.</em>",sub:"Maikling research session.",lname:"Pangalan mo",lrole:"Tungkulin mo",lmarket:"Iyong market",lpin:"Research PIN (6 digits)",btn:"Simulan →",hint:"Ang PIN ay ipinadala kasama ang invite.",load:"Inihahanda…",live:"Session in progress",ph:"I-type ang sagot…",tyTitle:"Maraming salamat.",tyMsg:"Naitala na ang iyong feedback.",tyFeedback:"Kumusta ang iyong karanasan sa interview na ito?",tyMeta:"Maaari mong isara ang window.",ci:"Filipino"},
+  pt:{title:"Bem-vindo.<br><em>Vamos começar.</em>",sub:"Sessão de pesquisa curta.",lname:"Seu nome",lrole:"Seu cargo",lmarket:"Seu mercado",lpin:"PIN da pesquisa (6 dígitos)",btn:"Iniciar →",hint:"O PIN foi enviado com o convite.",load:"Configurando…",live:"Sessão em andamento",ph:"Digite sua resposta…",tyTitle:"Muito obrigado.",tyMsg:"Seu feedback foi registrado.",tyFeedback:"Como foi sua experiência com esta entrevista?",tyMeta:"Você pode fechar esta janela.",ci:"Português (Brasileiro)"},
+  zh:{title:"欢迎。<br><em>让我们开始吧。</em>",sub:"简短的研究会话。",lname:"您的姓名",lrole:"您的职位",lmarket:"您的市场",lpin:"研究PIN码（6位）",btn:"开始会话 →",hint:"PIN码已随邀请发送。",load:"正在设置…",live:"会话进行中",ph:"输入您的回答…",tyTitle:"非常感谢。",tyMsg:"您的反馈已被记录。",tyFeedback:"您对这次访谈的体验如何？",tyMeta:"您可以关闭此窗口。",ci:"中文"},
 };
 
-let lang = 'en';
+let lang='en';
 
 function applyLang(code){
   lang=code;const t=T[code]||T.en;
@@ -262,6 +325,7 @@ function applyLang(code){
   document.getElementById('t-sub').textContent=t.sub;
   document.getElementById('t-lname').textContent=t.lname;
   document.getElementById('t-lrole').textContent=t.lrole;
+  document.getElementById('t-lmarket').textContent=t.lmarket;
   document.getElementById('t-lpin').textContent=t.lpin;
   document.getElementById('t-btn').textContent=t.btn;
   document.getElementById('t-hint').textContent=t.hint;
@@ -285,159 +349,165 @@ document.querySelectorAll('.lopt').forEach(opt=>{
 });
 document.addEventListener('click',()=>document.getElementById('ldd').classList.remove('open'));
 
-// ── PIN handlers (Issue 3 fix) ────────────────────────────────
-function pinInput(el, idx) {
-  // Strip non-digits, keep only last char
-  const val = el.value.replace(/\D/g,'');
-  el.value = val ? val[val.length-1] : '';
-  el.classList.toggle('filled', !!el.value);
+// ── Markdown renderer ─────────────────────────────────────────
+function renderMd(text){
+  if(!text)return'';
+  return text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g,'<em>$1</em>')
+    .replace(/\n/g,'<br>');
+}
+
+// ── PIN handlers ──────────────────────────────────────────────
+function pinInput(el,idx){
+  const val=el.value.replace(/\D/g,'');
+  el.value=val?val[val.length-1]:'';
+  el.classList.toggle('filled',!!el.value);
   clearPinError();
 }
-
-function pinKeyUp(e, idx) {
-  // Auto-advance after any digit is entered
-  if (/^\d$/.test(e.key) && document.getElementById('p'+idx).value) {
-    if (idx < 5) {
-      const next = document.getElementById('p'+(idx+1));
-      if (next) { next.focus(); next.select(); }
-    }
+function pinKeyUp(e,idx){
+  if(/^\d$/.test(e.key)&&document.getElementById('p'+idx).value){
+    if(idx<5){const next=document.getElementById('p'+(idx+1));if(next){next.focus();next.select();}}
   }
 }
-
-function pinKeyDown(e, idx) {
-  if (e.key === 'Backspace' && !e.target.value && idx > 0) {
-    const prev = document.getElementById('p'+(idx-1));
-    if (prev) { prev.focus(); prev.value=''; prev.classList.remove('filled'); }
-  }
-  if (e.key === 'ArrowLeft' && idx > 0) document.getElementById('p'+(idx-1))?.focus();
-  if (e.key === 'ArrowRight' && idx < 5) document.getElementById('p'+(idx+1))?.focus();
+function pinKeyDown(e,idx){
+  if(e.key==='Backspace'&&!e.target.value&&idx>0){const prev=document.getElementById('p'+(idx-1));if(prev){prev.focus();prev.value='';prev.classList.remove('filled');}}
+  if(e.key==='ArrowLeft'&&idx>0)document.getElementById('p'+(idx-1))?.focus();
+  if(e.key==='ArrowRight'&&idx<5)document.getElementById('p'+(idx+1))?.focus();
 }
-
-function pinPaste(e) {
+function pinPaste(e){
   e.preventDefault();
-  const p = (e.clipboardData.getData('text')||'').replace(/\D/g,'').slice(0,6);
+  const p=(e.clipboardData.getData('text')||'').replace(/\D/g,'').slice(0,6);
   p.split('').forEach((ch,i)=>{const d=document.getElementById('p'+i);if(d){d.value=ch;d.classList.add('filled');}});
-  const last = Math.min(p.length, 5);
-  document.getElementById('p'+last)?.focus();
+  document.getElementById('p'+Math.min(p.length,5))?.focus();
   clearPinError();
 }
-
-function getPin(){ return [0,1,2,3,4,5].map(i=>document.getElementById('p'+i).value).join(''); }
-
-function clearPinError() {
+function getPin(){return[0,1,2,3,4,5].map(i=>document.getElementById('p'+i).value).join('');}
+function clearPinError(){
   document.getElementById('pin-error').classList.remove('show');
-  for(let i=0;i<6;i++) document.getElementById('p'+i).classList.remove('err');
+  for(let i=0;i<6;i++)document.getElementById('p'+i).classList.remove('err');
 }
-
-function showPinError(msg) {
-  // Issue 4 fix: visible shake + error message
-  const errEl = document.getElementById('pin-error');
-  errEl.textContent = msg;
-  errEl.classList.add('show');
-  for(let i=0;i<6;i++) document.getElementById('p'+i).classList.add('err');
+function showPinError(msg){
+  const el=document.getElementById('pin-error');el.textContent=msg;el.classList.add('show');
+  for(let i=0;i<6;i++)document.getElementById('p'+i).classList.add('err');
 }
 
 // ── State ─────────────────────────────────────────────────────
-let session=null, pName='', pRole='';
-let history=[], qAnswered=0, active=false, smartThreadId=null;
+let session=null,pName='',pRole='',pMarket='';
+let history=[],qAnswered=0,active=false,smartThreadId=null;
+let carouselUrls=[],carouselIdx=0;
+let starRating=0,participantId=null;
 
 // ── Entry ─────────────────────────────────────────────────────
-async function validateEntry() {
+async function validateEntry(){
   clearPinError();
-  let ok = true;
-  const name = document.getElementById('i-name').value.trim();
-  const role = document.getElementById('i-role').value;
-  const pin = getPin();
-
-  document.getElementById('e-name').classList.remove('show');
+  let ok=true;
+  const name=document.getElementById('i-name').value.trim();
+  const role=document.getElementById('i-role').value;
+  const market=document.getElementById('i-market').value;
+  const pin=getPin();
   document.getElementById('e-role').classList.remove('show');
+  document.getElementById('e-market').classList.remove('show');
+  if(!name){ok=false;}
+  if(!role){document.getElementById('e-role').classList.add('show');ok=false;}
+  if(!market){document.getElementById('e-market').classList.add('show');ok=false;}
+  if(pin.length<6){showPinError('Please enter your 6-digit PIN.');ok=false;}
+  if(!ok)return;
 
-  if(!name){ document.getElementById('e-name').classList.add('show'); ok=false; }
-  if(!role){ document.getElementById('e-role').classList.add('show'); ok=false; }
-  if(pin.length<6){ showPinError('Please enter your 6-digit PIN.'); ok=false; }
-  if(!ok) return;
-
-  const btn = document.getElementById('entry-btn');
-  btn.classList.add('loading'); btn.disabled=true;
+  const btn=document.getElementById('entry-btn');btn.classList.add('loading');btn.disabled=true;
   showScreen('loading');
-
-  try {
-    const res = await DB.validatePin(pin);
-    if(!res.valid) {
-      showScreen('entry');
-      showPinError(res.error || 'Invalid PIN. Please check your invite.');
-      btn.classList.remove('loading'); btn.disabled=false;
-      return;
-    }
-    session=res.session; pName=name; pRole=role;
-    await DB.startParticipant(pin, name, role, (T[lang]||T.en).ci);
+  try{
+    const res=await DB.validatePin(pin);
+    if(!res.valid){showScreen('entry');showPinError(res.error||'Invalid PIN. Please check your invite.');btn.classList.remove('loading');btn.disabled=false;return;}
+    session=res.session;pName=name;pRole=role;pMarket=market;
+    // Issue 9: store market in participant record
+    const rec=await DB.startParticipant(pin,name,role,(T[lang]||T.en).ci,market);
+    if(rec&&rec[0])participantId=rec[0].id;
     startInterview();
-  } catch(e) {
-    showScreen('entry');
-    showPinError('Connection error — please try again.');
-    btn.classList.remove('loading'); btn.disabled=false;
-  }
+  }catch(e){showScreen('entry');showPinError('Connection error — please try again.');btn.classList.remove('loading');btn.disabled=false;}
 }
 
 // ── Interview ─────────────────────────────────────────────────
-function startInterview() {
+function startInterview(){
   showScreen('interview');
   document.getElementById('card').classList.add('wide');
-  history=[]; qAnswered=0; active=true; smartThreadId=null;
-  const urls=(session.file_ids||[]).filter(Boolean).map(id=>{
-    // Supabase storage public URL
-    return `${CONFIG.SUPABASE_URL}/storage/v1/object/public/candor-files/${id}`;
-  });
-  if(urls.length>0) renderMockups(urls);
+  history=[];qAnswered=0;active=true;smartThreadId=null;
+  const urls=(session.file_ids||[]).filter(Boolean).map(id=>`${CONFIG.SUPABASE_URL}/storage/v1/object/public/candor-files/${id}`);
+  if(urls.length>0)initCarousel(urls);
   updateProg(0);
-  callAI('Please begin the interview.', true);
+  callAI('Please begin the interview.',true);
 }
 
-function renderMockups(urls){
-  const strip=document.getElementById('mstrip');strip.innerHTML='';
-  urls.forEach((url,i)=>{
-    const img=document.createElement('img');img.src=url;img.className='mthumb'+(i===0?' on':'');
-    img.onclick=()=>setMockup(i,url);strip.appendChild(img);
-  });
-  document.getElementById('mstrip-wrap').style.display='block';setMockup(0,urls[0]);
+// ── Issue 13: Carousel ────────────────────────────────────────
+function initCarousel(urls){
+  carouselUrls=urls;carouselIdx=0;
+  document.getElementById('carousel-wrap').style.display='block';
+  updateCarousel();
 }
-function setMockup(i,url){
-  document.querySelectorAll('.mthumb').forEach((t,j)=>t.classList.toggle('on',j===i));
-  document.getElementById('mprev-img').src=url;document.getElementById('mprev').style.display='block';
+function updateCarousel(){
+  document.getElementById('carousel-img').src=carouselUrls[carouselIdx];
+  document.getElementById('carousel-prev').classList.toggle('hidden',carouselIdx===0);
+  document.getElementById('carousel-next').classList.toggle('hidden',carouselIdx===carouselUrls.length-1);
+  const dots=document.getElementById('carousel-dots');
+  dots.innerHTML=carouselUrls.map((_,i)=>`<div class="cdot${i===carouselIdx?' on':''}"></div>`).join('');
 }
+function carouselNav(dir){
+  carouselIdx=Math.max(0,Math.min(carouselUrls.length-1,carouselIdx+dir));
+  updateCarousel();
+}
+function openLightbox(){
+  document.getElementById('lightbox-img').src=carouselUrls[carouselIdx];
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
 
-async function callAI(userMessage, isFirstMessage) {
-  setInput(false); showTyping(true);
-  const t = T[lang]||T.en;
-  const totalQ = parseInt(session.total_questions)||8;
-  const focus = Array.isArray(session.focus) ? session.focus.join(', ') : (session.focus||'');
-
-  const sysPrompt =
-    `You are a warm, expert UX researcher conducting a structured user research interview.\n\n`+
-    `PARTICIPANT: ${pName}, role: ${pRole}\n`+
+// ── AI call ───────────────────────────────────────────────────
+async function callAI(userMessage,isFirstMessage){
+  setInput(false);showTyping(true);
+  // Issue 12: use participant's selected language, not session default
+  const t=T[lang]||T.en;
+  const totalQ=parseInt(session.total_questions)||8;
+  const focus=Array.isArray(session.focus)?session.focus.join(', '):(session.focus||'');
+  // Issue 11: stronger language enforcement
+  const sysPrompt=
+    `You are a professional UX researcher conducting a structured user research interview.\n\n`+
+    `PARTICIPANT: ${pName}, role: ${pRole}, market: ${pMarket}\n`+
     `PRODUCT: ${session.product}\nRESEARCH GOAL: ${session.goal}\n`+
     `USER PERSONA: ${session.persona||'Not specified'}\nFOCUS AREAS: ${focus}\n`+
     `TARGET EXCHANGES: ${totalQ}\n`+
-    `LANGUAGE: Conduct the ENTIRE interview in ${t.ci}. Every word must be in ${t.ci}.\n`+
+    `\n⚠️ LANGUAGE REQUIREMENT: YOU MUST RESPOND EXCLUSIVELY IN ${t.ci}. THIS IS MANDATORY AND NON-NEGOTIABLE. Even if the participant writes in English or another language, you MUST still respond in ${t.ci} only.\n`+
     (session.custom_questions?`\nQUESTION SCRIPT:\n${session.custom_questions}`:'')+
     (session.interview_prompt?`\nINTERVIEW STRATEGY:\n${session.interview_prompt}`:'')+
     (session.file_ids?.length?`\nMOCKUPS: Screen images are visible to the participant. Reference specific UI elements.`:'')+
-    `\n\nRULES:\n- ONE question per message\n- Warm, curious, empathetic\n`+
-    `- After exactly ${totalQ} participant responses, output ONLY: [SESSION_COMPLETE]\n\n`+
-    `Start: warmly greet ${pName} by first name, say this is ~${session.duration_mins} minutes about ${session.product}, then ask your first open question.`;
+    `\n\nRULES:\n- ONE question per message only\n- Warm and professional — no emojis\n- Keep opening greeting to 2 sentences maximum\n`+
+    // Issue 8: warm closing before SESSION_COMPLETE
+    `- After exactly ${totalQ} participant responses, say a warm 1-sentence thank you to ${pName} by name, then on a NEW LINE output only: [SESSION_COMPLETE]\n\n`+
+    `Start: greet ${pName} briefly in ${t.ci} (max 2 sentences), then ask your first open question immediately.`;
 
-  try {
-    const r = await SMART.interview(sysPrompt, userMessage, smartThreadId, isFirstMessage, pName+'@participant');
+  try{
+    const r=await SMART.interview(sysPrompt,userMessage,smartThreadId,isFirstMessage,pName+'@participant');
     showTyping(false);
-    if(r.threadId) smartThreadId=r.threadId;
+    if(r.threadId)smartThreadId=r.threadId;
     history.push({role:'user',content:userMessage});
-    history.push({role:'assistant',content:r.text});
-    if(r.text.includes('[SESSION_COMPLETE]')){ endInterview(); return; }
-    addBubble('ai',r.text); setInput(true);
-  } catch(e) {
-    showTyping(false);
-    addBubble('ai','⚠️ '+e.message);
+
+    // Issue 8: strip [SESSION_COMPLETE] token, check if present
+    const rawText=r.text;
+    const hasComplete=rawText.includes('[SESSION_COMPLETE]');
+    const cleanText=rawText.replace('[SESSION_COMPLETE]','').trim();
+
+    history.push({role:'assistant',content:rawText});
+
+    if(cleanText)addBubble('ai',cleanText);
+
+    if(hasComplete){
+      // Issue 8: delay transition, let closing message show
+      setTimeout(()=>endInterview(),2000);
+      return;
+    }
     setInput(true);
+  }catch(e){
+    showTyping(false);addBubble('ai','⚠️ '+e.message);setInput(true);
   }
 }
 
@@ -452,22 +522,62 @@ function sendMsg(){
 
 async function endInterview(){
   active=false;setInput(false);
-  try{ await DB.saveTranscript(session.pin, pName, history); }
-  catch(e){ console.warn('Save failed',e); }
-  setTimeout(()=>{showScreen('ty');document.getElementById('card').classList.remove('wide');},700);
+  try{await DB.saveTranscript(session.pin,pName,history,participantId);}
+  catch(e){console.warn('Save failed',e);}
+  // Issue 8: fade transition instead of abrupt switch
+  const interview=document.getElementById('s-interview');
+  interview.classList.add('fading');
+  setTimeout(()=>{
+    showScreen('ty');
+    document.getElementById('card').classList.remove('wide');
+    applyThankyouLang();
+  },400);
+}
+
+// ── Issue 14: Star feedback ───────────────────────────────────
+function applyThankyouLang(){
+  const t=T[lang]||T.en;
+  document.getElementById('ty-title').textContent=t.tyTitle;
+  document.getElementById('ty-msg').textContent=t.tyMsg;
+  document.getElementById('ty-feedback-lbl').textContent=t.tyFeedback;
+  document.getElementById('t-meta').textContent=t.tyMeta;
+}
+
+function selectStar(n){
+  starRating=n;
+  document.querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('on',i<n));
+  document.getElementById('feedback-submit').disabled=false;
+}
+
+async function submitFeedback(){
+  const comment=document.getElementById('feedback-text').value.trim();
+  const btn=document.getElementById('feedback-submit');
+  btn.disabled=true;btn.textContent='Saving…';
+  try{
+    await DB.saveFeedback(session.pin,pName,starRating,comment,participantId);
+    document.getElementById('feedback-done').style.display='block';
+    document.getElementById('stars').style.display='none';
+    document.getElementById('feedback-text').style.display='none';
+    btn.style.display='none';
+  }catch(e){
+    btn.disabled=false;btn.textContent='Submit feedback';
+    console.warn('Feedback save failed',e);
+    document.getElementById('feedback-done').textContent='✓ Thank you!';
+    document.getElementById('feedback-done').style.display='block';
+  }
 }
 
 // ── Helpers ───────────────────────────────────────────────────
 function showScreen(id){
   ['s-entry','s-loading','s-interview','s-ty','s-error'].forEach(s=>{
-    const el=document.getElementById(s);el.style.display='none';el.classList.remove('on');
+    const el=document.getElementById(s);el.style.display='none';el.classList.remove('on','fading');
   });
   const el=document.getElementById('s-'+id);el.style.display='block';el.classList.add('on');
 }
 function addBubble(role,text){
   const area=document.getElementById('chat-msgs');
   const div=document.createElement('div');div.className='bubble '+role;
-  div.innerHTML=`<div class="bav">${role==='user'?'👤':'AI'}</div><div class="btxt">${text.replace(/\n/g,'<br>')}</div>`;
+  div.innerHTML=`<div class="bav">${role==='user'?'👤':'AI'}</div><div class="btxt">${renderMd(text)}</div>`;
   area.appendChild(div);area.scrollTop=area.scrollHeight;
 }
 function showTyping(show){
@@ -498,8 +608,7 @@ function updateProg(n){
   document.getElementById('llbl').textContent=meta[l][0];
   document.getElementById('lflag').textContent=meta[l][1];
   applyLang(l);
-  // Pre-fill PIN from URL param
-  const pin = new URLSearchParams(window.location.search).get('pin')||'';
+  const pin=new URLSearchParams(window.location.search).get('pin')||'';
   if(pin.length===6){
     pin.split('').forEach((ch,i)=>{const d=document.getElementById('p'+i);if(d){d.value=ch;d.classList.add('filled');}});
   }
