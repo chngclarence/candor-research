@@ -142,11 +142,27 @@ tbody tr:hover .row-acts{opacity:1;}
 .up-bar{height:100%;background:var(--accent);border-radius:2px;transition:width 0.3s;}
 /* Roles config */
 .roles-list{display:flex;flex-direction:column;gap:6px;margin-bottom:8px;}
-.role-item{display:flex;align-items:center;gap:8px;}
+.role-item{display:flex;align-items:center;gap:6px;}
 .role-item input{flex:1;background:var(--s2);border:1.5px solid var(--border);border-radius:8px;padding:7px 10px;color:var(--ink);font-family:'Instrument Sans',sans-serif;font-size:12px;outline:none;}
 .role-item input:focus{border-color:var(--accent);background:var(--sf);}
-.role-rem{border:none;background:none;color:var(--ink3);cursor:pointer;font-size:14px;}
+.role-rem{border:none;background:none;color:var(--ink3);cursor:pointer;font-size:14px;padding:2px 4px;line-height:1;}
 .role-rem:hover{color:var(--red);}
+/* Role reorder buttons */
+.role-arrows{display:flex;flex-direction:column;gap:1px;flex-shrink:0;}
+.role-arrow{border:none;background:none;color:var(--ink3);cursor:pointer;font-size:10px;padding:1px 3px;line-height:1;border-radius:3px;transition:color 0.15s,background 0.15s;}
+.role-arrow:hover{color:var(--accent);background:var(--adim);}
+.role-arrow:disabled{opacity:0.2;cursor:not-allowed;}
+/* Toggle switch — used for require_email in index.html */
+.toggle-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--s2);border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:all 0.2s;user-select:none;}
+.toggle-row:hover{border-color:#ccc6ba;}
+.toggle-row.on{background:rgba(45,106,79,0.08);border-color:rgba(45,106,79,0.25);}
+.toggle-knob{width:32px;height:18px;border-radius:9px;background:var(--border);position:relative;flex-shrink:0;transition:background 0.2s;pointer-events:none;}
+.toggle-knob::after{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:white;top:2px;left:2px;transition:transform 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2);}
+.toggle-row.on .toggle-knob{background:var(--accent);}
+.toggle-row.on .toggle-knob::after{transform:translateX(14px);}
+.toggle-lbl{font-size:13px;color:var(--ink2);line-height:1.4;}
+.toggle-lbl strong{font-weight:600;display:block;font-size:12px;}
+.toggle-lbl span{font-size:11px;color:var(--ink3);}
 /* Clarification */
 .clarif-box{background:var(--sf);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-top:12px;box-shadow:0 1px 4px rgba(0,0,0,0.04);}
 .clarif-title{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--ink3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
@@ -506,15 +522,16 @@ tbody tr:hover .row-acts{opacity:1;}
         <!-- Issue 41-revised: require email toggle -->
         <div class="field">
           <label>Collect participant emails <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
-          <div class="anon-toggle" id="f-require-email-toggle" onclick="document.getElementById('f-require-email-toggle').classList.toggle('on')" style="margin-top:2px;">
-            <div class="toggle-switch"></div>
-            <div class="anon-lbl"><strong>Require email address</strong><span>Participants must enter their email before the session starts.</span></div>
+          <div class="toggle-row" id="f-require-email-toggle" onclick="this.classList.toggle('on')" style="margin-top:2px;">
+            <div class="toggle-knob"></div>
+            <div class="toggle-lbl"><strong>Require email address</strong><span>Participants must enter their email before the session starts.</span></div>
           </div>
         </div>
       </div>
       <div class="fsec">
         <!-- Issue 22: renamed section -->
-        <div class="fsec-title">Materials & References</div>
+        <div class="fsec-title">Materials & References <span style="font-weight:400;font-size:11px;color:var(--ink3);text-transform:none;letter-spacing:0;font-family:'Instrument Sans',sans-serif;">— optional</span></div>
+        <div style="font-size:12px;color:var(--ink3);margin-bottom:14px;line-height:1.5;">Leave this section empty and the AI will design the interview from scratch based on your topic and goal.</div>
         <!-- Issue 86: participant-facing label + badge -->
         <div class="field">
           <label>Materials for participants <span style="font-size:10px;background:var(--adim);color:var(--accent);border:1px solid var(--aborder);border-radius:20px;padding:2px 8px;font-weight:600;letter-spacing:0;text-transform:none;margin-left:4px;">👁 Visible to interviewees</span></label>
@@ -754,9 +771,9 @@ tbody tr:hover .row-acts{opacity:1;}
         <!-- Issue 41-revised: require email toggle in edit modal -->
         <div class="field">
           <label>Collect participant emails</label>
-          <div class="anon-toggle" id="e-require-email-toggle" onclick="document.getElementById('e-require-email-toggle').classList.toggle('on')" style="margin-top:2px;">
-            <div class="toggle-switch"></div>
-            <div class="anon-lbl"><strong>Require email address</strong><span>Participants must enter their email before starting.</span></div>
+          <div class="toggle-row" id="e-require-email-toggle" onclick="this.classList.toggle('on')" style="margin-top:2px;">
+            <div class="toggle-knob"></div>
+            <div class="toggle-lbl"><strong>Require email address</strong><span>Participants must enter their email before starting.</span></div>
           </div>
         </div>
         <div class="field">
@@ -1318,8 +1335,9 @@ function updateEditFocusCounter(){
 function addEditRoleField(value=''){
   const list=document.getElementById('e-roles-list');
   const div=document.createElement('div');div.className='role-item';
-  div.innerHTML=`<input type="text" placeholder="e.g. Ops Executive" value="${esc(value)}"><button class="role-rem" onclick="this.parentElement.remove()">✕</button>`;
+  div.innerHTML=`<div class="role-arrows"><button class="role-arrow" onclick="moveRole(this,-1)" title="Move up">▲</button><button class="role-arrow" onclick="moveRole(this,1)" title="Move down">▼</button></div><input type="text" placeholder="e.g. Ops Executive" value="${esc(value)}"><button class="role-rem" onclick="this.parentElement.remove();updateRoleArrows('e-roles-list')" title="Remove">✕</button>`;
   list.appendChild(div);
+  updateRoleArrows('e-roles-list');
 }
 
 async function handleEditFiles(files){
@@ -1487,11 +1505,37 @@ function resetCreate(){
 function addRoleField(value=''){
   const list=document.getElementById('roles-list');
   const div=document.createElement('div');div.className='role-item';
-  div.innerHTML=`<input type="text" placeholder="e.g. Ops Executive" value="${esc(value)}" oninput="syncRoles()"><button class="role-rem" onclick="this.parentElement.remove();syncRoles()">✕</button>`;
+  div.innerHTML=`<div class="role-arrows"><button class="role-arrow" onclick="moveRole(this,-1)" title="Move up">▲</button><button class="role-arrow" onclick="moveRole(this,1)" title="Move down">▼</button></div><input type="text" placeholder="e.g. Ops Executive" value="${esc(value)}" oninput="syncRoles()"><button class="role-rem" onclick="this.parentElement.remove();syncRoles();updateRoleArrows('roles-list')" title="Remove">✕</button>`;
   list.appendChild(div);
+  updateRoleArrows('roles-list');
 }
 function syncRoles(){
   customRoles=Array.from(document.querySelectorAll('.role-item input')).map(i=>i.value.trim()).filter(Boolean);
+}
+
+// Role reorder helpers
+function moveRole(btn, dir){
+  const item=btn.closest('.role-item');
+  const list=item.parentElement;
+  const items=Array.from(list.children);
+  const idx=items.indexOf(item);
+  const target=items[idx+dir];
+  if(!target)return;
+  if(dir===-1)list.insertBefore(item,target);
+  else list.insertBefore(target,item);
+  const listId=list.id;
+  updateRoleArrows(listId);
+  if(listId==='roles-list')syncRoles();
+}
+function updateRoleArrows(listId){
+  const list=document.getElementById(listId);
+  if(!list)return;
+  const items=Array.from(list.children);
+  items.forEach((item,i)=>{
+    const btns=item.querySelectorAll('.role-arrow');
+    if(btns[0])btns[0].disabled=(i===0);
+    if(btns[1])btns[1].disabled=(i===items.length-1);
+  });
 }
 
 // Issue 3: improve goal
