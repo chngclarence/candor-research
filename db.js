@@ -231,10 +231,32 @@ const DB = (() => {
       body: blob,
     });
     if (!res.ok) throw new Error('Upload failed');
-    return {
-      fileId: safeName,
-      viewUrl: `${CONFIG.SUPABASE_URL}/storage/v1/object/public/candor-files/${safeName}`,
-    };
+    return { fileId: safeName };
+  }
+
+  // Signed URLs for private candor-files bucket (expires in 1 hour by default)
+  async function getSignedUrls(fileIds, expiresIn = 3600) {
+    if (!fileIds || !fileIds.length) return [];
+    const res = await fetch(
+      `${CONFIG.SUPABASE_URL}/storage/v1/object/sign/candor-files`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': CONFIG.SUPABASE_KEY,
+          'Authorization': `Bearer ${CONFIG.SUPABASE_KEY}`,
+        },
+        body: JSON.stringify({ paths: fileIds, expiresIn }),
+      }
+    );
+    if (!res.ok) throw new Error('Failed to generate signed URLs');
+    const data = await res.json();
+    // Returns array of { path, signedURL, error }
+    return data.map(item =>
+      item.signedURL
+        ? `${CONFIG.SUPABASE_URL}/storage/v1${item.signedURL}`
+        : null
+    );
   }
 
   // ── Summary ───────────────────────────────────────────────
@@ -278,6 +300,6 @@ const DB = (() => {
     getSessions, getSession, createSession, updateSession, saveDraft, editSession,
     archiveSession, deleteSession, addCoAdmin, removeCoAdmin, validatePin,
     startParticipant, saveTranscript, saveFeedback, getTranscripts, getAvgRating,
-    uploadFile, saveSummary, exportSession, generatePin,
+    uploadFile, getSignedUrls, saveSummary, exportSession, generatePin,
   };
 })();
