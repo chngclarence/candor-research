@@ -27,8 +27,9 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .lopt.on{color:var(--accent);font-weight:600;}
 /* Card */
 .card{background:var(--sf);border-radius:20px;border:1px solid var(--border);box-shadow:0 2px 2px rgba(0,0,0,0.04),0 12px 48px rgba(0,0,0,0.08);width:100%;max-width:480px;position:relative;z-index:10;overflow:hidden;transition:max-width 0.3s ease;}
-/* Issue 44: wide = side-by-side */
-.card.wide{max-width:100%;width:100%;max-width:min(960px,calc(100vw - 40px));}
+/* Issue 44: wide = side-by-side; #85: fill viewport height */
+.card.wide{max-width:min(960px,calc(100vw - 40px));height:calc(100vh - 40px);display:flex;flex-direction:column;}
+.card.wide #s-interview{display:flex!important;flex-direction:column;flex:1;min-height:0;}
 .card-top{padding:30px 32px 24px;border-bottom:1px solid var(--border);background:linear-gradient(155deg,#fff 55%,rgba(45,106,79,0.04));}
 .brand{display:flex;align-items:center;gap:8px;margin-bottom:20px;}
 .bmark{width:24px;height:24px;border-radius:6px;background:var(--accent);display:flex;align-items:center;justify-content:center;}
@@ -87,9 +88,9 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .lspin{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 14px;}
 .ltxt{font-size:14px;color:var(--ink2);}
 /* Issue 44: side-by-side interview layout */
-.interview-layout{display:flex;flex:1;}
-.materials-panel{width:55%;border-right:1px solid var(--border);display:flex;flex-direction:column;background:var(--s2);}
-.chat-panel{flex:1;display:flex;flex-direction:column;}
+.interview-layout{display:flex;flex:1;min-height:0;}
+.materials-panel{width:55%;border-right:1px solid var(--border);display:flex;flex-direction:column;background:var(--s2);min-height:0;}
+.chat-panel{flex:1;display:flex;flex-direction:column;min-height:0;}
 /* Interview header */
 .chat-hdr{display:flex;align-items:center;gap:10px;padding:13px 24px;background:rgba(45,106,79,0.06);border-bottom:1px solid var(--border);}
 .ldot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 2s ease-in-out infinite;flex-shrink:0;}
@@ -106,9 +107,11 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .mat-nav-btn{width:28px;height:28px;border:1px solid var(--border);border-radius:7px;background:var(--sf);color:var(--ink2);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
 .mat-nav-btn:hover{border-color:var(--accent);color:var(--accent);}
 .mat-nav-btn:disabled{opacity:0.3;cursor:not-allowed;}
-.mat-content{flex:1;overflow:hidden;position:relative;}
+.mat-content{flex:1;overflow:hidden;position:relative;min-height:0;}
 .mat-img-wrap{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--s2);cursor:zoom-in;overflow:hidden;}
 .mat-img-wrap img{max-width:100%;max-height:100%;object-fit:contain;}
+/* Issue 84: PDF via Google Docs Viewer iframe */
+.mat-pdf-frame{width:100%;height:100%;border:none;display:block;}
 .mat-pdf-wrap{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:var(--s2);}
 .mat-pdf-name{font-size:13px;font-family:'JetBrains Mono',monospace;color:var(--ink2);text-align:center;padding:0 20px;word-break:break-all;}
 .mat-open-btn{padding:9px 20px;background:var(--accent);color:white;border:none;border-radius:9px;font-family:'Instrument Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;}
@@ -122,7 +125,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .lightbox img{max-width:95vw;max-height:92vh;object-fit:contain;border-radius:8px;}
 .lightbox-close{position:fixed;top:16px;right:20px;background:rgba(255,255,255,0.15);color:white;border:none;border-radius:50%;width:36px;height:36px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 /* Chat */
-.chat-msgs{flex:1;overflow-y:auto;padding:16px 24px;display:flex;flex-direction:column;gap:11px;max-height:360px;}
+.chat-msgs{flex:1;overflow-y:auto;padding:16px 24px;display:flex;flex-direction:column;gap:11px;}
 .chat-msgs::-webkit-scrollbar{width:3px;}
 .chat-msgs::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
 .bubble{display:flex;gap:9px;animation:fu 0.22s ease;}
@@ -154,6 +157,18 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .vbtn.listening{background:var(--red-dim,rgba(192,57,43,0.1));border-color:#c0392b;color:#c0392b;animation:vPulse 1s ease-in-out infinite;}
 .vbtn:disabled{opacity:0.3;cursor:not-allowed;}
 @keyframes vPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.08);}}
+/* Issue 82: mute toggle */
+.mute-btn{background:none;border:none;cursor:pointer;font-size:15px;color:var(--ink3);opacity:0.6;padding:4px 6px;border-radius:7px;transition:all 0.15s;line-height:1;margin-left:4px;}
+.mute-btn:hover{opacity:1;background:rgba(0,0,0,0.05);}
+.mute-btn.muted{opacity:1;color:#c0392b;}
+/* Issue 79: replay button on AI bubbles */
+.replay-btn{background:none;border:none;cursor:pointer;font-size:12px;color:var(--ink3);padding:2px 5px;border-radius:5px;transition:all 0.15s;opacity:0;margin-left:4px;vertical-align:middle;line-height:1;}
+.bubble.ai:hover .replay-btn{opacity:0.7;}
+.replay-btn:hover{opacity:1!important;color:var(--accent);}
+/* Issue 81: PTT continuous mode indicator */
+.vbtn.ptt-active{background:rgba(45,106,79,0.12);border-color:var(--accent);color:var(--accent);}
+.ptt-hint{font-size:10px;color:var(--ink3);text-align:center;padding:2px 0 4px;font-style:italic;display:none;}
+.ptt-hint.show{display:block;}
 /* Thank you */
 .ty-wrap{text-align:center;padding:10px 0 4px;}
 /* Issue 50: checkmark instead of prayer hands */
@@ -184,10 +199,9 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .err-msg{font-size:13px;color:var(--ink2);line-height:1.6;}
 /* Mobile: stack layout */
 @media(max-width:640px){
-  .card.wide{max-width:100%;}
+  .card.wide{max-width:100%;height:calc(100vh - 40px);}
   .interview-layout{flex-direction:column;}
-  .materials-panel{width:100%;height:260px;border-right:none;border-bottom:1px solid var(--border);}
-  .chat-msgs{max-height:240px;}
+  .materials-panel{width:100%;height:260px;flex-shrink:0;border-right:none;border-bottom:1px solid var(--border);}
 }
 </style>
 </head>
@@ -227,13 +241,11 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <div class="field">
         <label id="t-lname">Your name</label>
         <input type="text" id="i-name" autocomplete="given-name">
-        <!-- Issue 41: anonymity toggle -->
-        <div class="anon-toggle" id="anon-toggle" onclick="toggleAnon()" style="margin-top:8px;">
-          <div class="toggle-switch"></div>
-          <div class="anon-lbl">
-            <strong id="t-anon-lbl">Respond anonymously</strong>
-            <span id="t-anon-sub">Your name won't be recorded. Your role and market will still be saved.</span>
-          </div>
+        <!-- Issue 41-revised: optional email field shown only if session requires it -->
+        <div id="email-field-wrap" style="display:none;margin-top:10px;">
+          <label id="t-lemail" style="display:block;font-size:11px;font-weight:600;letter-spacing:0.7px;text-transform:uppercase;color:var(--ink3);margin-bottom:6px;">Your email *</label>
+          <input type="email" id="i-email" autocomplete="email" placeholder="name@shopee.com" style="width:100%;border:1.5px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Instrument Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--bg);outline:none;transition:border-color 0.2s;appearance:none;">
+          <div class="ferr" id="e-email">Please enter a valid email address.</div>
         </div>
       </div>
       <div class="field">
@@ -304,6 +316,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
         <div class="prog-lbl" id="prog-lbl">0%</div>
       </div>
+      <!-- Issue 82: mute TTS toggle — default OFF (muted) -->
+      <button class="mute-btn muted" id="mute-btn" onclick="toggleMute()" title="Toggle AI voice">🔇</button>
     </div>
     <div class="interview-layout" id="interview-layout">
       <!-- Materials panel (shown only if files exist) -->
@@ -323,9 +337,10 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <div class="chat-msgs" id="chat-msgs"></div>
         <div class="input-row">
           <textarea class="cinput" id="cinput" rows="1" disabled></textarea>
-          <button class="vbtn" id="vbtn" onclick="toggleVoice()" disabled title="Voice input">🎙</button>
+          <button class="vbtn" id="vbtn" onclick="toggleVoice()" disabled title="Voice input (hold for push-to-talk)">🎙</button>
           <button class="sbtn" id="sbtn" onclick="sendMsg()" disabled>↑</button>
         </div>
+        <div class="ptt-hint" id="ptt-hint">🎙 Listening… tap 🎙 to stop</div>
       </div>
     </div>
   </div>
@@ -336,8 +351,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <div class="ty-wrap">
         <!-- Issue 58: Candor the Otter happy pose -->
         <img src="https://djgelauzjyvdehodyvwx.supabase.co/storage/v1/object/public/candor-files/mascot/mascot-happy.png" class="ty-otter" alt="Candor">
-        <div class="ty-title" id="ty-title">Thank you so much.</div>
-        <div class="ty-msg" id="ty-msg">Your feedback has been recorded and will directly shape the product. We really appreciate your time today.</div>
+        <div class="ty-title" id="ty-title">Thank you.</div>
+        <div class="ty-msg" id="ty-msg">Your insights have been recorded. Thank you for your time and honesty — it makes a real difference.</div>
         <!-- Issue 14: star feedback -->
         <div class="feedback-section">
           <div class="feedback-label" id="ty-feedback-lbl">How was your experience with this interview?</div>
@@ -372,13 +387,13 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 <script>
 // ── Translations ──────────────────────────────────────────────
 const T={
-  en:{title:"Welcome.<br><em>Let's get started.</em>",sub:"This is a short research session. Your honest feedback helps us build better products.",lname:"Your name",lrole:"Your role",lmarket:"Your market",lpin:"Research PIN (6 digits)",btn:"Begin Session →",hint:"Your 6-digit PIN was sent with your research invite.",load:"Setting up your session…",live:"Session in progress",ph:"Type your response…",tyTitle:"Thank you so much.",tyMsg:"Your feedback has been recorded and will directly shape the product. We really appreciate your time today.",tyFeedback:"How was your experience with this interview?",feedbackPh:"Any comments? (optional)",tyMeta:"You may close this window.",ci:"English",anonLbl:"Respond anonymously",anonSub:"Your name won't be recorded. Your role and market will still be saved."},
-  id:{title:"Selamat datang.<br><em>Mari kita mulai.</em>",sub:"Sesi riset singkat. Masukan Anda membantu kami.",lname:"Nama Anda",lrole:"Peran Anda",lmarket:"Pasar Anda",lpin:"PIN Riset (6 digit)",btn:"Mulai Sesi →",hint:"PIN dikirim bersama undangan riset.",load:"Menyiapkan sesi…",live:"Sesi berlangsung",ph:"Ketik jawaban…",tyTitle:"Terima kasih banyak.",tyMsg:"Masukan Anda telah dicatat.",tyFeedback:"Bagaimana pengalaman Anda?",feedbackPh:"Ada komentar? (opsional)",tyMeta:"Anda boleh menutup jendela ini.",ci:"Bahasa Indonesia",anonLbl:"Tanggapi secara anonim",anonSub:"Nama Anda tidak akan dicatat. Peran dan pasar Anda tetap disimpan."},
-  vi:{title:"Chào mừng.<br><em>Hãy bắt đầu nào.</em>",sub:"Phiên nghiên cứu ngắn.",lname:"Tên của bạn",lrole:"Vai trò",lmarket:"Thị trường",lpin:"Mã PIN (6 chữ số)",btn:"Bắt đầu →",hint:"Mã PIN được gửi kèm thư mời.",load:"Đang chuẩn bị…",live:"Phiên đang diễn ra",ph:"Nhập câu trả lời…",tyTitle:"Cảm ơn rất nhiều.",tyMsg:"Phản hồi của bạn đã được ghi lại.",tyFeedback:"Trải nghiệm của bạn như thế nào?",feedbackPh:"Có bình luận không? (tùy chọn)",tyMeta:"Bạn có thể đóng cửa sổ.",ci:"Tiếng Việt",anonLbl:"Phản hồi ẩn danh",anonSub:"Tên của bạn sẽ không được ghi lại."},
-  th:{title:"ยินดีต้อนรับ<br><em>มาเริ่มกันเลย</em>",sub:"เซสชันวิจัยสั้นๆ",lname:"ชื่อของคุณ",lrole:"บทบาท",lmarket:"ตลาด",lpin:"PIN (6 หลัก)",btn:"เริ่มเซสชัน →",hint:"PIN ถูกส่งพร้อมคำเชิญ",load:"กำลังตั้งค่า…",live:"เซสชันดำเนินอยู่",ph:"พิมพ์คำตอบ…",tyTitle:"ขอบคุณมากๆ",tyMsg:"ข้อเสนอแนะของคุณถูกบันทึกแล้ว",tyFeedback:"ประสบการณ์ของคุณเป็นอย่างไร?",feedbackPh:"มีความคิดเห็นไหม? (ไม่บังคับ)",tyMeta:"คุณสามารถปิดหน้าต่างนี้ได้",ci:"ภาษาไทย",anonLbl:"ตอบโดยไม่ระบุชื่อ",anonSub:"ชื่อของคุณจะไม่ถูกบันทึก"},
-  tl:{title:"Maligayang pagdating.<br><em>Magsimula na tayo.</em>",sub:"Maikling research session.",lname:"Pangalan mo",lrole:"Tungkulin mo",lmarket:"Iyong market",lpin:"Research PIN (6 digits)",btn:"Simulan →",hint:"Ang PIN ay ipinadala kasama ang invite.",load:"Inihahanda…",live:"Session in progress",ph:"I-type ang sagot…",tyTitle:"Maraming salamat.",tyMsg:"Naitala na ang iyong feedback.",tyFeedback:"Kumusta ang iyong karanasan?",feedbackPh:"May komento? (opsyonal)",tyMeta:"Maaari mong isara ang window.",ci:"Filipino",anonLbl:"Sumagot nang hindi nagpapakilala",anonSub:"Hindi itatala ang iyong pangalan."},
-  pt:{title:"Bem-vindo.<br><em>Vamos começar.</em>",sub:"Sessão de pesquisa curta.",lname:"Seu nome",lrole:"Seu cargo",lmarket:"Seu mercado",lpin:"PIN da pesquisa (6 dígitos)",btn:"Iniciar →",hint:"O PIN foi enviado com o convite.",load:"Configurando…",live:"Sessão em andamento",ph:"Digite sua resposta…",tyTitle:"Muito obrigado.",tyMsg:"Seu feedback foi registrado.",tyFeedback:"Como foi sua experiência?",feedbackPh:"Algum comentário? (opcional)",tyMeta:"Você pode fechar esta janela.",ci:"Português (Brasileiro)",anonLbl:"Responder anonimamente",anonSub:"Seu nome não será gravado."},
-  zh:{title:"欢迎。<br><em>让我们开始吧。</em>",sub:"简短的研究会话。",lname:"您的姓名",lrole:"您的职位",lmarket:"您的市场",lpin:"研究PIN码（6位）",btn:"开始会话 →",hint:"PIN码已随邀请发送。",load:"正在设置…",live:"会话进行中",ph:"输入您的回答…",tyTitle:"非常感谢。",tyMsg:"您的反馈已被记录。",tyFeedback:"您对这次访谈的体验如何？",feedbackPh:"有什么意见吗？（可选）",tyMeta:"您可以关闭此窗口。",ci:"中文",anonLbl:"匿名回答",anonSub:"您的姓名将不会被记录。"},
+  en:{title:"Welcome.<br><em>Let's get started.</em>",sub:"This is a short research session. Your honest feedback helps us build better products.",lname:"Your name",lemail:"Your email",lrole:"Your role",lmarket:"Your market",lpin:"Research PIN (6 digits)",btn:"Begin Session →",hint:"Your 6-digit PIN was sent with your research invite.",load:"Setting up your session…",live:"Session in progress",ph:"Type your response…",tyTitle:"Thank you.",tyMsg:"Your insights have been recorded. Thank you for your time and honesty — it makes a real difference.",tyFeedback:"How was your experience with this interview?",feedbackPh:"Any comments? (optional)",tyMeta:"You may close this window.",ci:"English",anonLbl:"Respond anonymously",anonSub:"Your name won't be recorded. Your role and market will still be saved."},
+  id:{title:"Selamat datang.<br><em>Mari kita mulai.</em>",sub:"Sesi riset singkat. Masukan Anda membantu kami.",lname:"Nama Anda",lemail:"Email Anda",lrole:"Peran Anda",lmarket:"Pasar Anda",lpin:"PIN Riset (6 digit)",btn:"Mulai Sesi →",hint:"PIN dikirim bersama undangan riset.",load:"Menyiapkan sesi…",live:"Sesi berlangsung",ph:"Ketik jawaban…",tyTitle:"Terima kasih.",tyMsg:"Wawasan Anda telah dicatat. Terima kasih atas waktu dan kejujuran Anda — itu sangat berarti.",tyFeedback:"Bagaimana pengalaman Anda?",feedbackPh:"Ada komentar? (opsional)",tyMeta:"Anda boleh menutup jendela ini.",ci:"Bahasa Indonesia",anonLbl:"Tanggapi secara anonim",anonSub:"Nama Anda tidak akan dicatat. Peran dan pasar Anda tetap disimpan."},
+  vi:{title:"Chào mừng.<br><em>Hãy bắt đầu nào.</em>",sub:"Phiên nghiên cứu ngắn.",lname:"Tên của bạn",lemail:"Email của bạn",lrole:"Vai trò",lmarket:"Thị trường",lpin:"Mã PIN (6 chữ số)",btn:"Bắt đầu →",hint:"Mã PIN được gửi kèm thư mời.",load:"Đang chuẩn bị…",live:"Phiên đang diễn ra",ph:"Nhập câu trả lời…",tyTitle:"Cảm ơn bạn.",tyMsg:"Ý kiến của bạn đã được ghi lại. Cảm ơn thời gian và sự thành thật của bạn — điều đó tạo ra sự khác biệt thực sự.",tyFeedback:"Trải nghiệm của bạn như thế nào?",feedbackPh:"Có bình luận không? (tùy chọn)",tyMeta:"Bạn có thể đóng cửa sổ.",ci:"Tiếng Việt",anonLbl:"Phản hồi ẩn danh",anonSub:"Tên của bạn sẽ không được ghi lại."},
+  th:{title:"ยินดีต้อนรับ<br><em>มาเริ่มกันเลย</em>",sub:"เซสชันวิจัยสั้นๆ",lname:"ชื่อของคุณ",lemail:"อีเมลของคุณ",lrole:"บทบาท",lmarket:"ตลาด",lpin:"PIN (6 หลัก)",btn:"เริ่มเซสชัน →",hint:"PIN ถูกส่งพร้อมคำเชิญ",load:"กำลังตั้งค่า…",live:"เซสชันดำเนินอยู่",ph:"พิมพ์คำตอบ…",tyTitle:"ขอบคุณ",tyMsg:"ข้อมูลเชิงลึกของคุณถูกบันทึกแล้ว ขอบคุณสำหรับเวลาและความซื่อสัตย์ของคุณ — มันสร้างความแตกต่างที่แท้จริง",tyFeedback:"ประสบการณ์ของคุณเป็นอย่างไร?",feedbackPh:"มีความคิดเห็นไหม? (ไม่บังคับ)",tyMeta:"คุณสามารถปิดหน้าต่างนี้ได้",ci:"ภาษาไทย",anonLbl:"ตอบโดยไม่ระบุชื่อ",anonSub:"ชื่อของคุณจะไม่ถูกบันทึก"},
+  tl:{title:"Maligayang pagdating.<br><em>Magsimula na tayo.</em>",sub:"Maikling research session.",lname:"Pangalan mo",lemail:"Iyong email",lrole:"Tungkulin mo",lmarket:"Iyong market",lpin:"Research PIN (6 digits)",btn:"Simulan →",hint:"Ang PIN ay ipinadala kasama ang invite.",load:"Inihahanda…",live:"Session in progress",ph:"I-type ang sagot…",tyTitle:"Salamat.",tyMsg:"Naitala na ang iyong mga pananaw. Salamat sa iyong oras at katapatan — malaki ang pagbabagong dulot nito.",tyFeedback:"Kumusta ang iyong karanasan?",feedbackPh:"May komento? (opsyonal)",tyMeta:"Maaari mong isara ang window.",ci:"Filipino",anonLbl:"Sumagot nang hindi nagpapakilala",anonSub:"Hindi itatala ang iyong pangalan."},
+  pt:{title:"Bem-vindo.<br><em>Vamos começar.</em>",sub:"Sessão de pesquisa curta.",lname:"Seu nome",lemail:"Seu email",lrole:"Seu cargo",lmarket:"Seu mercado",lpin:"PIN da pesquisa (6 dígitos)",btn:"Iniciar →",hint:"O PIN foi enviado com o convite.",load:"Configurando…",live:"Sessão em andamento",ph:"Digite sua resposta…",tyTitle:"Obrigado.",tyMsg:"Suas percepções foram registradas. Obrigado pelo seu tempo e honestidade — isso faz uma diferença real.",tyFeedback:"Como foi sua experiência?",feedbackPh:"Algum comentário? (opcional)",tyMeta:"Você pode fechar esta janela.",ci:"Português (Brasileiro)",anonLbl:"Responder anonimamente",anonSub:"Seu nome não será gravado."},
+  zh:{title:"欢迎。<br><em>让我们开始吧。</em>",sub:"简短的研究会话。",lname:"您的姓名",lemail:"您的邮箱",lrole:"您的职位",lmarket:"您的市场",lpin:"研究PIN码（6位）",btn:"开始会话 →",hint:"PIN码已随邀请发送。",load:"正在设置…",live:"会话进行中",ph:"输入您的回答…",tyTitle:"感谢您。",tyMsg:"您的见解已被记录。感谢您的时间和坦诚——这真的很有意义。",tyFeedback:"您对这次访谈的体验如何？",feedbackPh:"有什么意见吗？（可选）",tyMeta:"您可以关闭此窗口。",ci:"中文",anonLbl:"匿名回答",anonSub:"您的姓名将不会被记录。"},
 };
 
 let lang='en';
@@ -396,6 +411,8 @@ function applyLang(code){
   document.getElementById('t-load').textContent=t.load;
   document.getElementById('t-live').textContent=t.live;
   const ci=document.getElementById('cinput');if(ci)ci.placeholder=t.ph;
+  // Issue 41-revised: translate email label
+  const elbl=document.getElementById('t-lemail');if(elbl)elbl.textContent=(t.lemail||'Your email')+' *';
   // Issue 48: translate feedback placeholder
   const ft=document.getElementById('feedback-text');if(ft)ft.placeholder=t.feedbackPh;
   // Issue 41: translate anonymity toggle
@@ -421,6 +438,7 @@ document.querySelectorAll('.lopt').forEach(opt=>{
   opt.addEventListener('click',function(e){
     e.stopPropagation();
     applyLang(this.dataset.code);
+    resetVoiceCache();
     document.getElementById('llbl').textContent=this.dataset.label;
     document.getElementById('ldd').classList.remove('open');
   });
@@ -489,11 +507,14 @@ async function fetchSessionRoles(){
         roles.map(r=>`<option>${r}</option>`).join('')+
         '<option>Other</option>';
     }
+    // Issue 41-revised: show email field only if session requires it
+    const emailWrap=document.getElementById('email-field-wrap');
+    if(emailWrap)emailWrap.style.display=res.session.require_email?'block':'none';
   }catch(e){}
 }
 
 // ── State ─────────────────────────────────────────────────────
-let session=null,pName='',pRole='',pMarket='';
+let session=null,pName='',pRole='',pMarket='',pEmail='';
 let history=[],qAnswered=0,active=false,smartThreadId=null;
 let matUrls=[],matIdx=0;
 let starRating=0,participantId=null;
@@ -526,6 +547,25 @@ async function validateEntry(){
   if(!role){document.getElementById('e-role').classList.add('show');ok=false;}
   if(!market){document.getElementById('e-market').classList.add('show');ok=false;}
   if(pin.length<6){showPinError('Please enter your 6-digit PIN.');ok=false;}
+
+  // Issue 41-revised: validate email if field is visible
+  let emailVal='';
+  const emailWrap=document.getElementById('email-field-wrap');
+  const emailInput=document.getElementById('i-email');
+  const emailErr=document.getElementById('e-email');
+  if(emailWrap&&emailWrap.style.display!=='none'){
+    emailVal=emailInput.value.trim();
+    const emailOk=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal);
+    if(!emailOk){
+      emailInput.classList.add('err');
+      emailErr.classList.add('show');
+      ok=false;
+    }else{
+      emailInput.classList.remove('err');
+      emailErr.classList.remove('show');
+    }
+  }
+
   if(!ok)return;
 
   const btn=document.getElementById('entry-btn');btn.classList.add('loading');btn.disabled=true;
@@ -533,8 +573,8 @@ async function validateEntry(){
   try{
     const res=await DB.validatePin(pin);
     if(!res.valid){showScreen('entry');showPinError(res.error||'Invalid PIN. Please check your invite.');btn.classList.remove('loading');btn.disabled=false;return;}
-    session=res.session;pName=name;pRole=role;pMarket=market;
-    const rec=await DB.startParticipant(pin,name,role,(T[lang]||T.en).ci,market);
+    session=res.session;pName=name;pRole=role;pMarket=market;pEmail=emailVal;
+    const rec=await DB.startParticipant(pin,name,role,(T[lang]||T.en).ci,market,emailVal||null);
     if(rec&&rec[0])participantId=rec[0].id;
     startInterview();
   }catch(e){showScreen('entry');showPinError('Connection error — please try again.');btn.classList.remove('loading');btn.disabled=false;}
@@ -576,12 +616,14 @@ function renderMaterial(){
   const filename=url.split('/').pop().replace(/^\d+_/,'');
 
   if(isPdf){
-    // iOS check
+    // iOS check — Google Docs Viewer doesn't work well on iOS Safari
     const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
     if(isIOS){
       content.innerHTML=`<div class="mat-pdf-wrap"><div style="font-size:48px">📄</div><div class="mat-pdf-name">${filename}</div><a href="${url}" target="_blank" class="mat-open-btn">Open PDF ↗</a></div>`;
     }else{
-      content.innerHTML=`<div style="width:100%;height:100%;"><embed src="${url}" type="application/pdf" width="100%" height="100%"></div>`;
+      // Issue 84: use Google Docs Viewer iframe to avoid CORS blank content
+      const viewerUrl=`https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`;
+      content.innerHTML=`<iframe class="mat-pdf-frame" src="${viewerUrl}" title="${filename}"></iframe>`;
     }
   }else{
     content.innerHTML=`<div class="mat-img-wrap" onclick="openLightbox('${url}')"><img src="${url}" alt="Reference material ${matIdx+1}"></div>`;
@@ -668,29 +710,68 @@ async function callAI(userMessage,isFirstMessage){
 }
 
 // ── Issue 20: Voice input (STT) + output (TTS) ────────────────
-let recognition=null;let isListening=false;let ttsEnabled=true;
+let recognition=null;let isListening=false;
+// Issue 82: TTS default OFF (muted)
+let ttsEnabled=false;
 const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+
+// Issue 82: mute toggle
+function toggleMute(){
+  ttsEnabled=!ttsEnabled;
+  const btn=document.getElementById('mute-btn');
+  if(ttsEnabled){
+    btn.textContent='🔊';btn.classList.remove('muted');btn.title='Mute AI voice';
+  }else{
+    btn.textContent='🔇';btn.classList.add('muted');btn.title='Unmute AI voice';
+    window.speechSynthesis&&window.speechSynthesis.cancel();
+  }
+}
 
 function initVoice(){
   if(!SpeechRecognition){document.getElementById('vbtn').style.display='none';return;}
   recognition=new SpeechRecognition();
-  recognition.continuous=false;recognition.interimResults=true;
-  recognition.onstart=()=>{isListening=true;document.getElementById('vbtn').classList.add('listening');document.getElementById('vbtn').textContent='⏹';};
-  recognition.onend=()=>{isListening=false;document.getElementById('vbtn').classList.remove('listening');document.getElementById('vbtn').textContent='🎙';};
-  recognition.onresult=e=>{
-    const transcript=Array.from(e.results).map(r=>r[0].transcript).join('');
-    document.getElementById('cinput').value=transcript;
-    if(e.results[e.results.length-1].isFinal){sendMsg();}
+  // Issue 81: continuous mode for push-to-talk
+  recognition.continuous=true;
+  recognition.interimResults=true;
+  recognition.onstart=()=>{
+    isListening=true;
+    const vbtn=document.getElementById('vbtn');
+    vbtn.classList.add('listening');vbtn.textContent='⏹';
+    document.getElementById('ptt-hint').classList.add('show');
   };
-  recognition.onerror=e=>{isListening=false;document.getElementById('vbtn').classList.remove('listening');document.getElementById('vbtn').textContent='🎙';};
+  recognition.onend=()=>{
+    isListening=false;
+    const vbtn=document.getElementById('vbtn');
+    vbtn.classList.remove('listening');vbtn.textContent='🎙';
+    document.getElementById('ptt-hint').classList.remove('show');
+    // Issue 81: auto-send on stop if there's content
+    const inp=document.getElementById('cinput');
+    if(inp.value.trim())sendMsg();
+  };
+  recognition.onresult=e=>{
+    // Issue 81: accumulate interim results live in textarea
+    let interim='',final='';
+    for(let i=0;i<e.results.length;i++){
+      if(e.results[i].isFinal)final+=e.results[i][0].transcript;
+      else interim+=e.results[i][0].transcript;
+    }
+    document.getElementById('cinput').value=(final+interim).trim();
+  };
+  recognition.onerror=e=>{
+    isListening=false;
+    const vbtn=document.getElementById('vbtn');
+    vbtn.classList.remove('listening');vbtn.textContent='🎙';
+    document.getElementById('ptt-hint').classList.remove('show');
+  };
 }
 
 function toggleVoice(){
   if(!recognition)return;
-  if(isListening){recognition.stop();}
-  else{
-    const t=T[lang]||T.en;
+  if(isListening){
+    recognition.stop();
+  }else{
     recognition.lang=langToSpeechCode(lang);
+    document.getElementById('cinput').value='';
     recognition.start();
   }
 }
@@ -700,17 +781,48 @@ function langToSpeechCode(code){
   return map[code]||'en-US';
 }
 
+// Issue 78: ranked female voice selection
+const FEMALE_VOICE_PRIORITY=[
+  'Samantha','Karen','Google UK English Female','Microsoft Aria Online (Natural)','Microsoft Aria','Microsoft Zira'
+];
+let _cachedVoice=null;
+function pickFemaleVoice(lang){
+  if(_cachedVoice)return _cachedVoice;
+  const voices=window.speechSynthesis.getVoices();
+  // 1. Try priority list by name
+  for(const name of FEMALE_VOICE_PRIORITY){
+    const v=voices.find(v=>v.name.includes(name));
+    if(v){_cachedVoice=v;return v;}
+  }
+  // 2. Fallback: any female-tagged voice matching lang
+  const langCode=langToSpeechCode(lang).split('-')[0];
+  const femaleMatch=voices.find(v=>
+    v.lang.startsWith(langCode)&&/female|woman|girl/i.test(v.name)
+  );
+  if(femaleMatch){_cachedVoice=femaleMatch;return femaleMatch;}
+  // 3. Any voice matching lang
+  const anyMatch=voices.find(v=>v.lang.startsWith(langCode));
+  if(anyMatch){_cachedVoice=anyMatch;return anyMatch;}
+  return null;
+}
+// Reset cache on lang change
+function resetVoiceCache(){_cachedVoice=null;}
+
 function speakText(text){
   if(!ttsEnabled||!window.speechSynthesis)return;
   window.speechSynthesis.cancel();
   const clean=text.replace(/<[^>]+>/g,'').replace(/\*\*/g,'').replace(/\*/g,'').trim();
   const utt=new SpeechSynthesisUtterance(clean);
   utt.lang=langToSpeechCode(lang);utt.rate=0.95;utt.pitch=1;
-  // Pick a voice if available
-  const voices=window.speechSynthesis.getVoices();
-  const match=voices.find(v=>v.lang.startsWith(utt.lang.split('-')[0]));
-  if(match)utt.voice=match;
+  // Issue 78: pick female voice
+  const voice=pickFemaleVoice(lang);
+  if(voice)utt.voice=voice;
   window.speechSynthesis.speak(utt);
+}
+
+// Ensure voices are loaded (Chrome defers voice list)
+if(window.speechSynthesis){
+  window.speechSynthesis.onvoiceschanged=()=>{resetVoiceCache();};
 }
 
 document.getElementById('cinput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}});
@@ -781,7 +893,13 @@ function addBubble(role,text){
   const area=document.getElementById('chat-msgs');
   const div=document.createElement('div');div.className='bubble '+role;
   const avatarLabel=role==='ai'?'✦':'👤';
-  div.innerHTML=`<div class="bav">${avatarLabel}</div><div class="btxt">${renderMd(text)}</div>`;
+  if(role==='ai'){
+    // Issue 79: replay button on AI bubbles
+    const bubbleId='b'+Date.now();
+    div.innerHTML=`<div class="bav">${avatarLabel}</div><div class="btxt" id="${bubbleId}">${renderMd(text)}<button class="replay-btn" onclick="speakText(document.getElementById('${bubbleId}').innerText)" title="Replay">🔊</button></div>`;
+  }else{
+    div.innerHTML=`<div class="bav">${avatarLabel}</div><div class="btxt">${renderMd(text)}</div>`;
+  }
   area.appendChild(div);area.scrollTop=area.scrollHeight;
   // Issue 20: TTS for AI messages
   if(role==='ai')speakText(text);
