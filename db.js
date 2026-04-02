@@ -58,7 +58,7 @@ const DB = (() => {
     return rows[0];
   }
 
-  async function createSession(data) {
+  async function createSession(data, asDraft = false) {
     const pin = await generatePin();
     const totalQ = Math.round((parseInt(data.duration_mins || 7) / 7) * 8) + 2;
     const row = {
@@ -70,20 +70,54 @@ const DB = (() => {
       focus: data.focus || [],
       total_questions: totalQ,
       language: data.language || 'English',
-      status: 'active',
+      // Issue 35: draft support
+      status: asDraft ? 'draft' : 'active',
       file_ids: data.file_ids || [],
       custom_questions: data.custom_questions || '',
       context_url: data.context_url || '',
       interview_prompt: data.interview_prompt || '',
       created_by: data.created_by || '',
       co_admins: [],
+      roles: data.roles || [],
+      // Issue 52: interviewer name
+      interviewer_name: data.interviewer_name || 'Candor',
     };
     const result = await request('POST', 'sessions', '', row);
     return Array.isArray(result) ? result[0] : result;
   }
 
+  // Issue 38: full session update for editing
   async function updateSession(pin, updates) {
     return request('PATCH', 'sessions', `?pin=eq.${pin}`, updates);
+  }
+
+  // Issue 35: save draft without PIN generation — reuse createSession with asDraft=true
+  async function saveDraft(data) {
+    return createSession(data, true);
+  }
+
+  // Issue 38: update existing session fields
+  async function editSession(pin, data) {
+    const totalQ = Math.round((parseInt(data.duration_mins || 7) / 7) * 8) + 2;
+    return updateSession(pin, {
+      product: data.product,
+      goal: data.goal,
+      persona: data.persona || '',
+      duration_mins: parseInt(data.duration_mins || 7),
+      focus: data.focus || [],
+      total_questions: totalQ,
+      language: data.language || 'English',
+      custom_questions: data.custom_questions || '',
+      context_url: data.context_url || '',
+      interview_prompt: data.interview_prompt || '',
+      roles: data.roles || [],
+      interviewer_name: data.interviewer_name || 'Candor',
+    });
+  }
+
+  // Issue 39: soft delete — archive
+  async function archiveSession(pin) {
+    return updateSession(pin, { status: 'archived' });
   }
 
   async function deleteSession(pin) {
@@ -117,7 +151,6 @@ const DB = (() => {
     }
   }
 
-  // Issue 9: added market parameter
   async function startParticipant(pin, name, role, language, market) {
     return request('POST', 'participants', '', {
       pin, name, role, language, market: market || '',
@@ -127,7 +160,6 @@ const DB = (() => {
     });
   }
 
-  // Issue 9+14: accept participantId to avoid re-lookup
   async function saveTranscript(pin, name, transcript, participantId) {
     let id = participantId;
     if (!id) {
@@ -142,10 +174,11 @@ const DB = (() => {
       completed_at: new Date().toISOString(),
     });
     const session = await getSession(pin);
-    await updateSession(pin, { response_count: (session.response_count || 0) + 1 });
+    const newCount = (session.response_count || 0) + 1;
+    await updateSession(pin, { response_count: newCount });
+    return newCount;
   }
 
-  // Issue 14: save star rating + open text comment
   async function saveFeedback(pin, name, rating, comment, participantId) {
     let id = participantId;
     if (!id) {
@@ -165,17 +198,23 @@ const DB = (() => {
       `?pin=eq.${pin}&status=eq.completed&select=*&order=completed_at.desc`);
   }
 
-  // ── File Upload (Supabase Storage) ────────────────────────
+  // Issue 23: get avg rating for a session
+  async function getAvgRating(pin) {
+    const rows = await request('GET', 'participants',
+      `?pin=eq.${pin}&status=eq.completed&select=experience_rating`);
+    const rated = rows.filter(r => r.experience_rating);
+    if (!rated.length) return null;
+    return (rated.reduce((a, r) => a + r.experience_rating, 0) / rated.length).toFixed(1);
+  }
+
+  // ── File Upload ───────────────────────────────────────────
   async function uploadFile(base64, mimeType, filename) {
-    // Convert base64 to blob
     const byteChars = atob(base64);
     const byteArr = new Uint8Array(byteChars.length);
     for (let i = 0; i < byteChars.length; i++) byteArr[i] = byteChars.charCodeAt(i);
     const blob = new Blob([byteArr], { type: mimeType });
-
     const safeName = `${Date.now()}_${filename.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
     const uploadUrl = `${CONFIG.SUPABASE_URL}/storage/v1/object/candor-files/${safeName}`;
-
     const res = await fetch(uploadUrl, {
       method: 'POST',
       headers: {
@@ -185,7 +224,6 @@ const DB = (() => {
       },
       body: blob,
     });
-
     if (!res.ok) throw new Error('Upload failed');
     return {
       fileId: safeName,
@@ -194,8 +232,13 @@ const DB = (() => {
   }
 
   // ── Summary ───────────────────────────────────────────────
-  async function saveSummary(pin, summary) {
-    await updateSession(pin, { summary });
+  // Issue 26: save with timestamp and response count
+  async function saveSummary(pin, summary, responseCount) {
+    await updateSession(pin, {
+      summary,
+      summary_generated_at: new Date().toISOString(),
+      summary_response_count: responseCount || 0,
+    });
   }
 
   async function exportSession(pin) {
@@ -211,14 +254,14 @@ const DB = (() => {
       `**Responses:** ${transcripts.length}`,
       `---`,
     ];
-    if (session.summary) lines.push(`# AI Summary\n${session.summary}\n---`);
+    if (session.summary) lines.push(`# Research Summary\n${session.summary}\n---`);
     lines.push(`# Transcripts`);
     transcripts.forEach(t => {
-      lines.push(`## ${t.name} — ${t.role} (${t.language})`);
+      lines.push(`## ${t.name} — ${t.role} · ${t.market || ''} (${t.language})`);
       lines.push(`*${new Date(t.completed_at).toLocaleString('en-SG')}*`);
       (t.transcript || []).forEach(m => {
         if (typeof m.content === 'string')
-          lines.push(`**${m.role === 'assistant' ? 'AI' : t.name}:** ${m.content}`);
+          lines.push(`**${m.role === 'assistant' ? (session.interviewer_name || 'Candor') : t.name}:** ${m.content}`);
       });
       lines.push('---');
     });
@@ -226,8 +269,9 @@ const DB = (() => {
   }
 
   return {
-    getSessions, getSession, createSession, updateSession, deleteSession,
-    addCoAdmin, removeCoAdmin, validatePin, startParticipant, saveTranscript,
-    getTranscripts, uploadFile, saveSummary, exportSession, generatePin, saveFeedback,
+    getSessions, getSession, createSession, updateSession, saveDraft, editSession,
+    archiveSession, deleteSession, addCoAdmin, removeCoAdmin, validatePin,
+    startParticipant, saveTranscript, saveFeedback, getTranscripts, getAvgRating,
+    uploadFile, saveSummary, exportSession, generatePin,
   };
 })();
