@@ -107,9 +107,9 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .mat-nav-btn{width:28px;height:28px;border:1px solid var(--border);border-radius:7px;background:var(--sf);color:var(--ink2);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
 .mat-nav-btn:hover{border-color:var(--accent);color:var(--accent);}
 .mat-nav-btn:disabled{opacity:0.3;cursor:not-allowed;}
-.mat-content{flex:1;overflow:hidden;position:relative;min-height:0;}
-.mat-img-wrap{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--s2);cursor:zoom-in;overflow:hidden;}
-.mat-img-wrap img{max-width:100%;max-height:100%;object-fit:contain;}
+.mat-content{flex:1;overflow:hidden;position:relative;min-height:0;height:100%;}
+.mat-img-wrap{width:100%;height:100%;display:flex;align-items:stretch;justify-content:center;background:var(--s2);cursor:zoom-in;overflow:hidden;}
+.mat-img-wrap img{width:100%;height:100%;object-fit:contain;}
 /* Issue 84: PDF via Google Docs Viewer iframe */
 .mat-pdf-frame{width:100%;height:100%;border:none;display:block;}
 .mat-pdf-wrap{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:var(--s2);}
@@ -235,7 +235,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     <div class="card-top">
       <div class="brand"><div class="bmark"></div><div class="bname">Candor Research</div></div>
       <div class="card-title" id="t-title">Welcome.<br><em>Let's get started.</em></div>
-      <div class="card-sub" id="t-sub">This is a short research session. Your honest feedback helps us build better products.</div>
+      <div class="card-sub" id="t-sub">This is a short research session. Your honest feedback means a lot to us.</div>
     </div>
     <div class="card-body">
       <div class="field">
@@ -350,7 +350,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     <div class="card-body" style="padding-top:34px;padding-bottom:34px;">
       <div class="ty-wrap">
         <!-- Issue 58: Candor the Otter happy pose -->
-        <img src="https://djgelauzjyvdehodyvwx.supabase.co/storage/v1/object/public/candor-files/mascot/mascot-happy.png" class="ty-otter" alt="Candor">
+        <img src="https://djgelauzjyvdehodyvwx.supabase.co/storage/v1/object/public/candor-public/mascot/mascot-happy.png" class="ty-otter" alt="Candor">
         <div class="ty-title" id="ty-title">Thank you.</div>
         <div class="ty-msg" id="ty-msg">Your insights have been recorded. Thank you for your time and honesty — it makes a real difference.</div>
         <!-- Issue 14: star feedback -->
@@ -387,7 +387,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 <script>
 // ── Translations ──────────────────────────────────────────────
 const T={
-  en:{title:"Welcome.<br><em>Let's get started.</em>",sub:"This is a short research session. Your honest feedback helps us build better products.",lname:"Your name",lemail:"Your email",lrole:"Your role",lmarket:"Your market",lpin:"Research PIN (6 digits)",btn:"Begin Session →",hint:"Your 6-digit PIN was sent with your research invite.",load:"Setting up your session…",live:"Session in progress",ph:"Type your response…",tyTitle:"Thank you.",tyMsg:"Your insights have been recorded. Thank you for your time and honesty — it makes a real difference.",tyFeedback:"How was your experience with this interview?",feedbackPh:"Any comments? (optional)",tyMeta:"You may close this window.",ci:"English",anonLbl:"Respond anonymously",anonSub:"Your name won't be recorded. Your role and market will still be saved."},
+  en:{title:"Welcome.<br><em>Let's get started.</em>",sub:"This is a short research session. Your honest feedback means a lot to us.",lname:"Your name",lemail:"Your email",lrole:"Your role",lmarket:"Your market",lpin:"Research PIN (6 digits)",btn:"Begin Session →",hint:"Your 6-digit PIN was sent with your research invite.",load:"Setting up your session…",live:"Session in progress",ph:"Type your response…",tyTitle:"Thank you.",tyMsg:"Your insights have been recorded. Thank you for your time and honesty — it makes a real difference.",tyFeedback:"How was your experience with this interview?",feedbackPh:"Any comments? (optional)",tyMeta:"You may close this window.",ci:"English",anonLbl:"Respond anonymously",anonSub:"Your name won't be recorded. Your role and market will still be saved."},
   id:{title:"Selamat datang.<br><em>Mari kita mulai.</em>",sub:"Sesi riset singkat. Masukan Anda membantu kami.",lname:"Nama Anda",lemail:"Email Anda",lrole:"Peran Anda",lmarket:"Pasar Anda",lpin:"PIN Riset (6 digit)",btn:"Mulai Sesi →",hint:"PIN dikirim bersama undangan riset.",load:"Menyiapkan sesi…",live:"Sesi berlangsung",ph:"Ketik jawaban…",tyTitle:"Terima kasih.",tyMsg:"Wawasan Anda telah dicatat. Terima kasih atas waktu dan kejujuran Anda — itu sangat berarti.",tyFeedback:"Bagaimana pengalaman Anda?",feedbackPh:"Ada komentar? (opsional)",tyMeta:"Anda boleh menutup jendela ini.",ci:"Bahasa Indonesia",anonLbl:"Tanggapi secara anonim",anonSub:"Nama Anda tidak akan dicatat. Peran dan pasar Anda tetap disimpan."},
   vi:{title:"Chào mừng.<br><em>Hãy bắt đầu nào.</em>",sub:"Phiên nghiên cứu ngắn.",lname:"Tên của bạn",lemail:"Email của bạn",lrole:"Vai trò",lmarket:"Thị trường",lpin:"Mã PIN (6 chữ số)",btn:"Bắt đầu →",hint:"Mã PIN được gửi kèm thư mời.",load:"Đang chuẩn bị…",live:"Phiên đang diễn ra",ph:"Nhập câu trả lời…",tyTitle:"Cảm ơn bạn.",tyMsg:"Ý kiến của bạn đã được ghi lại. Cảm ơn thời gian và sự thành thật của bạn — điều đó tạo ra sự khác biệt thực sự.",tyFeedback:"Trải nghiệm của bạn như thế nào?",feedbackPh:"Có bình luận không? (tùy chọn)",tyMeta:"Bạn có thể đóng cửa sổ.",ci:"Tiếng Việt",anonLbl:"Phản hồi ẩn danh",anonSub:"Tên của bạn sẽ không được ghi lại."},
   th:{title:"ยินดีต้อนรับ<br><em>มาเริ่มกันเลย</em>",sub:"เซสชันวิจัยสั้นๆ",lname:"ชื่อของคุณ",lemail:"อีเมลของคุณ",lrole:"บทบาท",lmarket:"ตลาด",lpin:"PIN (6 หลัก)",btn:"เริ่มเซสชัน →",hint:"PIN ถูกส่งพร้อมคำเชิญ",load:"กำลังตั้งค่า…",live:"เซสชันดำเนินอยู่",ph:"พิมพ์คำตอบ…",tyTitle:"ขอบคุณ",tyMsg:"ข้อมูลเชิงลึกของคุณถูกบันทึกแล้ว ขอบคุณสำหรับเวลาและความซื่อสัตย์ของคุณ — มันสร้างความแตกต่างที่แท้จริง",tyFeedback:"ประสบการณ์ของคุณเป็นอย่างไร?",feedbackPh:"มีความคิดเห็นไหม? (ไม่บังคับ)",tyMeta:"คุณสามารถปิดหน้าต่างนี้ได้",ci:"ภาษาไทย",anonLbl:"ตอบโดยไม่ระบุชื่อ",anonSub:"ชื่อของคุณจะไม่ถูกบันทึก"},
@@ -581,7 +581,7 @@ async function validateEntry(){
 }
 
 // ── Interview ─────────────────────────────────────────────────
-function startInterview(){
+async function startInterview(){
   showScreen('interview');
   document.getElementById('card').classList.add('wide');
   history=[];qAnswered=0;active=true;smartThreadId=null;
@@ -590,8 +590,13 @@ function startInterview(){
   // Issue 44: conditionally show side-by-side layout
   const fileIds=(session.file_ids||[]).filter(Boolean);
   if(fileIds.length>0){
-    const urls=fileIds.map(id=>`${CONFIG.SUPABASE_URL}/storage/v1/object/public/candor-files/${id}`);
-    initMaterials(urls);
+    try{
+      const signedUrls=await DB.getSignedUrls(fileIds);
+      const validUrls=signedUrls.filter(Boolean);
+      if(validUrls.length>0)initMaterials(validUrls);
+    }catch(e){
+      console.warn('Could not generate signed URLs for materials',e);
+    }
   } else {
     // No materials — single column, remove materials panel
     document.getElementById('materials-panel').style.display='none';
