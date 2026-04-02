@@ -372,7 +372,7 @@ tbody tr:hover .row-acts{opacity:1;}
 <div id="login-screen" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:1000;align-items:center;justify-content:center;">
   <div style="background:var(--sf);border:1px solid var(--border);border-radius:20px;padding:48px 40px;max-width:420px;width:100%;text-align:center;box-shadow:0 12px 48px rgba(0,0,0,0.08);">
     <!-- Issue 58: Candor the Otter on login -->
-    <img src="https://djgelauzjyvdehodyvwx.supabase.co/storage/v1/object/public/candor-files/mascot/mascot-clipboard.png" class="login-otter" alt="Candor">
+    <img src="https://djgelauzjyvdehodyvwx.supabase.co/storage/v1/object/public/candor-public/mascot/mascot-clipboard.png" class="login-otter" alt="Candor">
     <div style="font-family:'Fraunces',serif;font-size:26px;font-weight:300;letter-spacing:-0.5px;margin-bottom:6px;">Candor <em style="font-style:italic;color:var(--accent)">Research</em></div>
     <!-- Issue 21: new tagline -->
     <div style="font-size:13px;color:var(--ink3);margin-bottom:28px;line-height:1.6;">Deeper, honest insights from the<br>people who matter most.</div>
@@ -411,7 +411,7 @@ tbody tr:hover .row-acts{opacity:1;}
 
 <!-- Issue 55: Confetti container -->
 <div id="confetti-wrap" style="position:fixed;inset:0;pointer-events:none;z-index:500;display:none;align-items:center;justify-content:center;">
-  <img src="https://djgelauzjyvdehodyvwx.supabase.co/storage/v1/object/public/candor-files/mascot/mascot-happy.png" id="confetti-otter" style="width:120px;opacity:0;transition:all 0.4s;position:absolute;bottom:80px;right:80px;">
+  <img src="https://djgelauzjyvdehodyvwx.supabase.co/storage/v1/object/public/candor-public/mascot/mascot-happy.png" id="confetti-otter" style="width:120px;opacity:0;transition:all 0.4s;position:absolute;bottom:80px;right:80px;">
 </div>
 
 <nav>
@@ -825,9 +825,9 @@ tbody tr:hover .row-acts{opacity:1;}
 <script>
 // ── Mascot URLs ───────────────────────────────────────────────
 const MASCOT = {
-  clipboard: 'https://djgelauzjyvdehodyvwx.supabase.co/storage/v1/object/public/candor-files/mascot/mascot-clipboard.png',
-  happy: 'https://djgelauzjyvdehodyvwx.supabase.co/storage/v1/object/public/candor-files/mascot/mascot-happy.png',
-  surprised: 'https://djgelauzjyvdehodyvwx.supabase.co/storage/v1/object/public/candor-files/mascot/mascot-surprised.png',
+  clipboard: 'https://djgelauzjyvdehodyvwx.supabase.co/storage/v1/object/public/candor-public/mascot/mascot-clipboard.png',
+  happy: 'https://djgelauzjyvdehodyvwx.supabase.co/storage/v1/object/public/candor-public/mascot/mascot-happy.png',
+  surprised: 'https://djgelauzjyvdehodyvwx.supabase.co/storage/v1/object/public/candor-public/mascot/mascot-surprised.png',
 };
 
 // ── State ─────────────────────────────────────────────────────
@@ -1115,7 +1115,7 @@ async function openSession(pin){
 }
 
 // Issue 25: render materials section
-function renderMaterials(session) {
+async function renderMaterials(session) {
   const hasFiles = (session.file_ids||[]).length > 0;
   const hasUrl = !!session.context_url;
   const hasQs = !!session.custom_questions;
@@ -1125,17 +1125,20 @@ function renderMaterials(session) {
   const thumbs = document.getElementById('mat-thumbs');
   thumbs.innerHTML = '';
   if (hasFiles) {
-    (session.file_ids||[]).forEach(id => {
-      const url = `${CONFIG.SUPABASE_URL}/storage/v1/object/public/candor-files/${id}`;
+    // Use signed URLs since candor-files bucket is private
+    let signedUrls = [];
+    try { signedUrls = await DB.getSignedUrls(session.file_ids||[]); } catch(e) {}
+    (session.file_ids||[]).forEach((id, i) => {
+      const url = signedUrls[i] || null;
       if (id.toLowerCase().endsWith('.pdf')) {
         const a = document.createElement('a');
-        a.href = url; a.target = '_blank';
+        if (url) { a.href = url; a.target = '_blank'; }
         a.innerHTML = `<div style="width:80px;height:60px;background:var(--s2);border:1px solid var(--border);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-size:10px;color:var(--ink3);gap:4px;"><span style="font-size:20px">📄</span>PDF</div>`;
         thumbs.appendChild(a);
       } else {
         const img = document.createElement('img');
-        img.src = url; img.className = 'mat-thumb';
-        img.onclick = () => window.open(url, '_blank');
+        if (url) { img.src = url; img.onclick = () => window.open(url, '_blank'); }
+        img.className = 'mat-thumb';
         thumbs.appendChild(img);
       }
     });
