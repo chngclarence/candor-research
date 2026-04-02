@@ -81,6 +81,8 @@ const DB = (() => {
       roles: data.roles || [],
       // Issue 52: interviewer name
       interviewer_name: data.interviewer_name || 'Candor',
+      // Issue 41-revised: require email from participants
+      require_email: data.require_email || false,
     };
     const result = await request('POST', 'sessions', '', row);
     return Array.isArray(result) ? result[0] : result;
@@ -99,7 +101,7 @@ const DB = (() => {
   // Issue 38: update existing session fields
   async function editSession(pin, data) {
     const totalQ = Math.round((parseInt(data.duration_mins || 7) / 7) * 8) + 2;
-    return updateSession(pin, {
+    const updates = {
       product: data.product,
       goal: data.goal,
       persona: data.persona || '',
@@ -112,7 +114,10 @@ const DB = (() => {
       interview_prompt: data.interview_prompt || '',
       roles: data.roles || [],
       interviewer_name: data.interviewer_name || 'Candor',
-    });
+    };
+    if (data.require_email !== undefined) updates.require_email = data.require_email;
+    if (data.file_ids !== undefined) updates.file_ids = data.file_ids;
+    return updateSession(pin, updates);
   }
 
   // Issue 39: soft delete — archive
@@ -151,9 +156,10 @@ const DB = (() => {
     }
   }
 
-  async function startParticipant(pin, name, role, language, market) {
+  async function startParticipant(pin, name, role, language, market, email) {
     return request('POST', 'participants', '', {
       pin, name, role, language, market: market || '',
+      email: email || null,
       started_at: new Date().toISOString(),
       status: 'started',
       transcript: [],
