@@ -349,13 +349,24 @@ tbody tr:hover .row-acts{opacity:1;}
 /* Issue 54: Snake game */
 .snake-modal{position:fixed;inset:0;background:rgba(26,24,20,0.85);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
 .snake-modal.open{display:flex;}
-.snake-box{background:#1a1814;border:2px solid var(--accent);border-radius:16px;padding:20px;text-align:center;}
+.snake-box{background:#1a1814;border:2px solid var(--accent);border-radius:16px;padding:20px;text-align:center;display:flex;gap:20px;align-items:flex-start;}
+.snake-left{display:flex;flex-direction:column;align-items:center;}
 .snake-title{font-family:'Fraunces',serif;font-size:18px;color:var(--accent);margin-bottom:4px;font-style:italic;}
 .snake-sub{font-size:11px;color:var(--ink3);margin-bottom:14px;font-family:'JetBrains Mono',monospace;}
 #snake-canvas{border:1px solid var(--accent);border-radius:8px;display:block;}
 .snake-score{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink3);margin-top:10px;}
 .snake-close{margin-top:12px;padding:7px 18px;background:none;border:1px solid var(--border2);color:var(--ink3);border-radius:8px;font-family:'Instrument Sans',sans-serif;font-size:12px;cursor:pointer;}
 .snake-close:hover{border-color:var(--accent);color:var(--accent);}
+/* Leaderboard */
+.snake-board{width:200px;background:rgba(255,255,255,0.03);border:1px solid rgba(45,106,79,0.3);border-radius:10px;padding:12px;text-align:left;}
+.snake-board-title{font-family:'Fraunces',serif;font-size:13px;color:var(--accent);margin-bottom:10px;text-align:center;font-style:italic;}
+.snake-board-list{display:flex;flex-direction:column;gap:4px;}
+.snake-board-row{display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink3);padding:3px 4px;border-radius:4px;}
+.snake-board-row.me{color:var(--accent);background:rgba(45,106,79,0.1);}
+.snake-board-rank{width:16px;text-align:right;flex-shrink:0;opacity:0.5;}
+.snake-board-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.snake-board-score{font-weight:700;color:var(--amber);flex-shrink:0;}
+.snake-board-empty{font-size:10px;color:var(--ink3);text-align:center;padding:10px 0;font-style:italic;opacity:0.6;}
 /* Login */
 .login-otter{width:120px;height:120px;object-fit:contain;margin-bottom:12px;}
 /* Print */
@@ -398,13 +409,19 @@ tbody tr:hover .row-acts{opacity:1;}
 <!-- Issue 54: Snake game modal -->
 <div class="snake-modal" id="snake-modal">
   <div class="snake-box">
-    <div class="snake-title">Candor Snake 🦦</div>
-    <div class="snake-sub">Arrow keys to move · Esc to close</div>
-    <canvas id="snake-canvas" width="300" height="300"></canvas>
-    <div class="snake-score">Score: <span id="snake-score">0</span></div>
-    <div style="display:flex;gap:8px;margin-top:12px;justify-content:center;">
-      <button class="snake-close" id="snake-restart" onclick="restartSnake()" style="display:none;border-color:var(--accent);color:var(--accent);">▶ Play again</button>
-      <button class="snake-close" onclick="closeSnake()">Close game</button>
+    <div class="snake-left">
+      <div class="snake-title">Candor Snake 🦦</div>
+      <div class="snake-sub">Arrow keys to move · Esc to close</div>
+      <canvas id="snake-canvas" width="300" height="300"></canvas>
+      <div class="snake-score">Score: <span id="snake-score">0</span></div>
+      <div style="display:flex;gap:8px;margin-top:12px;justify-content:center;">
+        <button class="snake-close" id="snake-restart" onclick="restartSnake()" style="display:none;border-color:var(--accent);color:var(--accent);">▶ Play again</button>
+        <button class="snake-close" onclick="closeSnake()">Close game</button>
+      </div>
+    </div>
+    <div class="snake-board">
+      <div class="snake-board-title">🏆 Top 20</div>
+      <div class="snake-board-list" id="snake-board-list"><div class="snake-board-empty">Loading…</div></div>
     </div>
   </div>
 </div>
@@ -501,14 +518,14 @@ tbody tr:hover .row-acts{opacity:1;}
         </div>
         <div class="field"><label>Focus areas <span style="font-weight:400;text-transform:none;letter-spacing:0">(pick up to 3)</span></label>
           <div class="tags" id="focus-tags">
-            <div class="tag on" data-v="First impressions">First impressions</div>
-            <div class="tag" data-v="Task flow">Task flow</div>
+            <div class="tag on" data-v="Sentiment">Sentiment</div>
+            <div class="tag" data-v="Pain Points">Pain Points</div>
+            <div class="tag" data-v="Workflows">Workflows</div>
+            <div class="tag on" data-v="Motivations">Motivations</div>
             <div class="tag" data-v="Clarity">Clarity</div>
-            <div class="tag on" data-v="Pain points">Pain points</div>
-            <div class="tag" data-v="Missing features">Missing features</div>
-            <div class="tag" data-v="Emotional response">Emotional response</div>
-            <div class="tag" data-v="Navigation">Navigation</div>
             <div class="tag" data-v="Trust">Trust</div>
+            <div class="tag" data-v="Unmet Needs">Unmet Needs</div>
+            <div class="tag" data-v="Decision Making">Decision Making</div>
           </div>
           <div class="focus-counter" id="focus-counter">2 / 3 selected</div>
         </div>
@@ -553,8 +570,8 @@ tbody tr:hover .row-acts{opacity:1;}
         </div>
         <div class="field">
           <label>AI background context <span style="font-size:10px;background:var(--amber-dim);color:var(--amber);border:1px solid rgba(212,162,76,0.3);border-radius:20px;padding:2px 8px;font-weight:600;letter-spacing:0;text-transform:none;margin-left:4px;">🔒 AI only · Not shown to participants</span></label>
-          <input id="f-url" type="url" placeholder="https://www.figma.com/file/… or Google Doc, BRD, Notion">
-          <div class="field-hint">Paste a Figma, Google Doc, BRD or Notion link to give the AI background knowledge. Participants will never see this.</div>
+          <textarea id="f-url" rows="3" placeholder="Paste notes, BRD excerpts, background information, or any context that will help the AI ask better questions." style="font-family:'Instrument Sans',sans-serif;font-size:13px;min-height:70px;resize:vertical;width:100%;border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--ink);background:var(--bg);outline:none;transition:border-color 0.2s;"></textarea>
+          <div class="field-hint">Text only — the AI reads this directly. Links to external files (Figma, Notion, Google Docs) are not supported.</div>
         </div>
       </div>
       <div class="fsec" id="clarif-section" style="display:none">
@@ -749,14 +766,14 @@ tbody tr:hover .row-acts{opacity:1;}
         <div class="field">
           <label>Focus areas <span style="font-weight:400;text-transform:none;letter-spacing:0">(pick up to 3)</span></label>
           <div class="tags" id="e-focus-tags">
-            <div class="tag" data-v="First impressions">First impressions</div>
-            <div class="tag" data-v="Task flow">Task flow</div>
+            <div class="tag" data-v="Sentiment">Sentiment</div>
+            <div class="tag" data-v="Pain Points">Pain Points</div>
+            <div class="tag" data-v="Workflows">Workflows</div>
+            <div class="tag" data-v="Motivations">Motivations</div>
             <div class="tag" data-v="Clarity">Clarity</div>
-            <div class="tag" data-v="Pain points">Pain points</div>
-            <div class="tag" data-v="Missing features">Missing features</div>
-            <div class="tag" data-v="Emotional response">Emotional response</div>
-            <div class="tag" data-v="Navigation">Navigation</div>
             <div class="tag" data-v="Trust">Trust</div>
+            <div class="tag" data-v="Unmet Needs">Unmet Needs</div>
+            <div class="tag" data-v="Decision Making">Decision Making</div>
           </div>
           <div class="focus-counter" id="e-focus-counter">0 / 3 selected</div>
         </div>
@@ -791,7 +808,8 @@ tbody tr:hover .row-acts{opacity:1;}
         </div>
         <div class="field">
           <label>AI background context <span style="font-size:10px;background:var(--amber-dim);color:var(--amber);border:1px solid rgba(212,162,76,0.3);border-radius:20px;padding:2px 8px;font-weight:500;letter-spacing:0;text-transform:none;margin-left:4px;">🔒 AI only</span></label>
-          <input id="e-url" type="url" placeholder="https://…">
+          <textarea id="e-url" rows="3" placeholder="Paste notes, BRD excerpts, background information, or any context that will help the AI ask better questions." style="font-family:'Instrument Sans',sans-serif;font-size:13px;min-height:70px;resize:vertical;width:100%;border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--ink);background:var(--bg);outline:none;transition:border-color 0.2s;"></textarea>
+          <div class="field-hint" style="font-size:11px;color:var(--ink3);margin-top:4px;">Text only — links to external files are not supported.</div>
         </div>
         <div id="edit-warn" style="display:none;padding:10px;background:var(--amber-dim);border:1px solid var(--amber);border-radius:8px;font-size:12px;color:var(--ink2);margin-top:4px;"></div>
       </div>
@@ -833,7 +851,7 @@ const MASCOT = {
 // ── State ─────────────────────────────────────────────────────
 let allSessions=[], currentSession=null, filterMode='mine';
 let currentUserEmail='';
-let uploadedFiles=[], selectedFocus=['First impressions','Pain points'];
+let uploadedFiles=[], selectedFocus=['Sentiment','Pain Points'];
 let clarificationHistory=[], clarThreadId=null, interviewPrompt='', publishedPin=null, emailList=[];
 let previewHistory=[], previewThreadId=null;
 let mcqSelections={};
@@ -1467,7 +1485,8 @@ function copyLink(){
 function copyDetailInvite(){
   if(!currentSession?.pin)return;
   const link=`${CONFIG.BASE_URL}/interview.html?pin=${currentSession.pin}`;
-  const msg=`Hi,\n\nYou've been invited to share your feedback in a short research session.\n\nPIN: ${currentSession.pin}\nLink: ${link}\n\nIt takes about ${currentSession.duration_mins||7} minutes. Your honest feedback helps us build better products.\n\nThank you!`;
+  const title=currentSession.product||'a research session';
+  const msg=`Hi,\n\nYou've been invited to share your feedback on: ${title}\n\nPIN: ${currentSession.pin}\nLink: ${link}\n\nIt takes about ${currentSession.duration_mins||7} minutes. Your honest feedback is greatly appreciated.\n\nThank you!`;
   navigator.clipboard.writeText(msg).then(()=>toast('Invite message copied!'));
 }
 function copyPinLink(pin){navigator.clipboard.writeText(`${CONFIG.BASE_URL}/interview.html?pin=${pin}`).then(()=>toast('Link copied!'));}
@@ -1881,7 +1900,9 @@ function renderEmailTags(){
 function copyInviteMsg(){
   if(!publishedPin)return;
   const link=`${CONFIG.BASE_URL}/interview.html?pin=${publishedPin}`;
-  const msg=`Hi,\n\nYou've been invited to share your feedback in a short research session.\n\nPIN: ${publishedPin}\nLink: ${link}\n\nIt only takes a few minutes. Your honest feedback helps us build better products.\n\nThank you!`;
+  const session=allSessions.find(s=>s.pin===publishedPin);
+  const title=session?.product||'a research session';
+  const msg=`Hi,\n\nYou've been invited to share your feedback on: ${title}\n\nPIN: ${publishedPin}\nLink: ${link}\n\nIt only takes a few minutes. Your honest feedback is greatly appreciated.\n\nThank you!`;
   navigator.clipboard.writeText(msg).then(()=>toast('Invite message copied — paste into SeaTalk or email!'));
 }
 
@@ -1889,9 +1910,11 @@ function copyInviteMsg(){
 function openGmailDraft(){
   if(!publishedPin)return;
   const link=`${CONFIG.BASE_URL}/interview.html?pin=${publishedPin}`;
-  const subject=encodeURIComponent(`Research invitation — PIN: ${publishedPin}`);
+  const session=allSessions.find(s=>s.pin===publishedPin);
+  const title=session?.product||'a research session';
+  const subject=encodeURIComponent(`Research invitation — ${title} — PIN: ${publishedPin}`);
   const body=encodeURIComponent(
-    `Hi,\n\nYou've been invited to share your feedback in a short research session.\n\nPIN: ${publishedPin}\nLink: ${link}\n\nIt only takes a few minutes. Your honest feedback helps us build better products.\n\nThank you!`
+    `Hi,\n\nYou've been invited to share your feedback on: ${title}\n\nPIN: ${publishedPin}\nLink: ${link}\n\nIt only takes a few minutes. Your honest feedback is greatly appreciated.\n\nThank you!`
   );
   const to=encodeURIComponent(currentUserEmail);
   const bcc=encodeURIComponent(emailList.join(','));
@@ -1951,13 +1974,42 @@ function updatePreview(){
 
 // ── Issue 54: Snake game ──────────────────────────────────────
 let snakeGame=null;
-function openSnake(){
+
+async function openSnake(){
   document.getElementById('snake-modal').classList.add('open');
+  await loadSnakeLeaderboard();
   startSnake();
 }
 function closeSnake(){
   document.getElementById('snake-modal').classList.remove('open');
   if(snakeGame){clearInterval(snakeGame);snakeGame=null;}
+}
+
+// Leaderboard helpers
+const ORG_DOMAINS=['@shopee.com','@spxexpress.com'];
+function isOrgEmail(email){return ORG_DOMAINS.some(d=>email&&email.endsWith(d));}
+function displayName(email){return(email||'').split('@')[0];}
+
+async function loadSnakeLeaderboard(){
+  const list=document.getElementById('snake-board-list');
+  try{
+    const rows=await DB.getSnakeScores();
+    if(!rows||!rows.length){list.innerHTML='<div class="snake-board-empty">No scores yet.<br>Be the first!</div>';return;}
+    list.innerHTML=rows.map((r,i)=>{
+      const isMe=r.email===currentUserEmail;
+      return `<div class="snake-board-row${isMe?' me':''}">
+        <span class="snake-board-rank">${i+1}</span>
+        <span class="snake-board-name">${esc(displayName(r.email))}${isMe?' ★':''}</span>
+        <span class="snake-board-score">${r.score}</span>
+      </div>`;
+    }).join('');
+  }catch(e){list.innerHTML='<div class="snake-board-empty">Could not load scores.</div>';}
+}
+
+async function submitSnakeScore(score){
+  if(!currentUserEmail||!isOrgEmail(currentUserEmail))return;
+  try{await DB.upsertSnakeScore(currentUserEmail,score);}catch(e){console.warn('Score save failed',e);}
+  await loadSnakeLeaderboard();
 }
 
 function startSnake(){
@@ -1970,9 +2022,7 @@ function startSnake(){
 
   function draw(){
     ctx.fillStyle='#1a1814';ctx.fillRect(0,0,canvas.width,canvas.height);
-    // Food
     ctx.fillStyle='#d4a24c';ctx.fillRect(food.x*SIZE,food.y*SIZE,SIZE-1,SIZE-1);
-    // Snake
     snake.forEach((s,i)=>{ctx.fillStyle=i===0?'#2d6a4f':'#3d8a6f';ctx.fillRect(s.x*SIZE,s.y*SIZE,SIZE-1,SIZE-1);});
   }
 
@@ -1980,12 +2030,14 @@ function startSnake(){
     if(!running)return;
     const head={x:snake[0].x+dir.x,y:snake[0].y+dir.y};
     if(head.x<0||head.x>=W||head.y<0||head.y>=H||snake.some(s=>s.x===head.x&&s.y===head.y)){
-      running=false;ctx.fillStyle='rgba(0,0,0,0.7)';ctx.fillRect(0,0,canvas.width,canvas.height);
+      running=false;
+      ctx.fillStyle='rgba(0,0,0,0.7)';ctx.fillRect(0,0,canvas.width,canvas.height);
       ctx.fillStyle='#2d6a4f';ctx.font='bold 18px monospace';ctx.textAlign='center';
       ctx.fillText('Game over!',canvas.width/2,canvas.height/2-10);
       ctx.fillStyle='#9a9590';ctx.font='12px monospace';
       ctx.fillText('Score: '+score,canvas.width/2,canvas.height/2+15);
       document.getElementById('snake-restart').style.display='inline-block';
+      submitSnakeScore(score);
       return;
     }
     snake.unshift(head);
