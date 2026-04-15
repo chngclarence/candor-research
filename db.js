@@ -296,10 +296,35 @@ const DB = (() => {
     return { content: lines.join('\n\n'), filename: `candor_${pin}_export.md` };
   }
 
+  // ── Snake leaderboard ─────────────────────────────────────────
+  async function getSnakeScores() {
+    const rows = await request('GET', 'snake_scores',
+      '?select=email,score,achieved_at&order=score.desc&limit=20');
+    return rows.filter(r =>
+      r.email && (r.email.endsWith('@shopee.com') || r.email.endsWith('@spxexpress.com'))
+    );
+  }
+
+  async function upsertSnakeScore(email, score) {
+    let existing = null;
+    try {
+      const rows = await request('GET', 'snake_scores',
+        `?email=eq.${encodeURIComponent(email)}&select=score`);
+      if (rows.length) existing = rows[0];
+    } catch(e) {}
+    if (existing && existing.score >= score) return;
+    await fetch(`${CONFIG.SUPABASE_URL}/rest/v1/snake_scores`, {
+      method: 'POST',
+      headers: { ...headers(), 'Prefer': 'resolution=merge-duplicates,return=minimal' },
+      body: JSON.stringify({ email, score, achieved_at: new Date().toISOString() }),
+    });
+  }
+
   return {
     getSessions, getSession, createSession, updateSession, saveDraft, editSession,
     archiveSession, deleteSession, addCoAdmin, removeCoAdmin, validatePin,
     startParticipant, saveTranscript, saveFeedback, getTranscripts, getAvgRating,
     uploadFile, getSignedUrls, saveSummary, exportSession, generatePin,
+    getSnakeScores, upsertSnakeScore,
   };
 })();
