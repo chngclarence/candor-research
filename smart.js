@@ -10,7 +10,7 @@ const SMART = (() => {
     const message = { input_str: prompt };
     if (threadId) message.thread_id = threadId;
 
-    const res = await fetch(CONFIG.SMART_URL, {
+    const res = await fetch(`${CONFIG.SMART_URL}?app=candor`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

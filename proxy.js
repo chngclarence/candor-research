@@ -8,9 +8,12 @@ const https = require('https');
 const os = require('os');
 
 const PORT = 3333;
-const SMART_URL = 'https://smart.shopee.io/apis/smart/v1/orchestrator/deployments/invoke';
 
-// Get local network IP for display
+// Whitelist of allowed SMART endpoints — add new apps here
+const ENDPOINTS = {
+  candor: 'https://smart.shopee.io/apis/smart/v1/orchestrator/deployments/invoke',
+};
+
 function getLocalIP() {
   const interfaces = os.networkInterfaces();
   for (const name of Object.keys(interfaces)) {
@@ -24,12 +27,10 @@ function getLocalIP() {
 }
 
 const server = http.createServer((req, res) => {
-  // Allow requests from any origin (GitHub Pages, localhost, colleagues on same network)
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  // Handle preflight
   if (req.method === 'OPTIONS') {
     res.writeHead(204);
     res.end();
@@ -42,12 +43,21 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // Collect request body
+  // Resolve app from query string e.g. POST /?app=candor
+  const app = new URL(req.url, `http://localhost`).searchParams.get('app') || 'candor';
+  const targetUrl = ENDPOINTS[app];
+
+  if (!targetUrl) {
+    res.writeHead(400, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: `Unknown app: "${app}". Allowed: ${Object.keys(ENDPOINTS).join(', ')}` }));
+    return;
+  }
+
   let body = '';
   req.on('data', chunk => body += chunk);
   req.on('end', () => {
-    // Forward to SMART
-    const smartReq = https.request(SMART_URL, {
+    const target = new URL(targetUrl);
+    const smartReq = https.request(target, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -59,12 +69,12 @@ const server = http.createServer((req, res) => {
       smartRes.on('end', () => {
         res.writeHead(smartRes.statusCode, { 'Content-Type': 'application/json' });
         res.end(response);
-        console.log(`[${new Date().toLocaleTimeString()}] SMART call → ${smartRes.statusCode} (from ${req.socket.remoteAddress})`);
+        console.log(`[${new Date().toLocaleTimeString()}] [${app}] SMART call → ${smartRes.statusCode} (from ${req.socket.remoteAddress})`);
       });
     });
 
     smartReq.on('error', err => {
-      console.error('SMART error:', err.message);
+      console.error(`[${app}] SMART error:`, err.message);
       res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: err.message }));
     });
@@ -74,7 +84,6 @@ const server = http.createServer((req, res) => {
   });
 });
 
-// Bind to 0.0.0.0 so colleagues on the same WiFi can reach this proxy
 server.listen(PORT, '0.0.0.0', () => {
   const localIP = getLocalIP();
   console.log(`
@@ -84,11 +93,10 @@ server.listen(PORT, '0.0.0.0', () => {
 ║   Local:    http://localhost:${PORT}                  ║
 ║   Network:  http://${localIP}:${PORT}          ║
 ║                                                   ║
+║   Allowed apps: ${Object.keys(ENDPOINTS).join(', ')}                    ║
+║                                                   ║
 ║   Keep this terminal open during sessions         ║
 ║   Must be on Shopee WiFi / VPN                    ║
-║                                                   ║
-║   Share the Network URL with colleagues           ║
-║   (they must be on the same WiFi)                 ║
 ╚═══════════════════════════════════════════════════╝
   `);
 });
