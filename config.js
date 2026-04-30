@@ -13,7 +13,7 @@ const CONFIG = {
   // SMART Agent
   // Routes through local proxy (http://localhost:3333) to bypass CORS
   // The proxy forwards to smart.shopee.io internally
-  SMART_URL:     'http://10.22.74.15:3333',
+  SMART_URL:     'https://passive-eldest-tidy.ngrok-free.dev',
   SMART_HASH_ID: 'dcpzn59545gwui5yghxw3inm',
   SMART_KEY:     'szr0ricalcuf1k8u394nsxcx',
 
