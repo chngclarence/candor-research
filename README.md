@@ -1,6 +1,10 @@
-# Candor Research 🦦
+# Candor Research
 
-AI-powered research interview tool — hosted on GitHub Pages, powered by SMART and Supabase.
+> AI that conducts async 1:1 interviews with your users.
+
+Set up in minutes, share a PIN link, AI handles the rest. Adapts follow-up questions dynamically based on each response. Synthesises findings into a summary, ready to export and share.
+
+---
 
 ## Live URLs
 - **Admin portal:** https://chngclarence.github.io/candor-research/
@@ -8,113 +12,217 @@ AI-powered research interview tool — hosted on GitHub Pages, powered by SMART 
 
 ---
 
-## Architecture
-- **Frontend:** GitHub Pages (static HTML/CSS/JS) — public
-- **Database:** Supabase (PostgreSQL) — cloud
-- **File storage:** Supabase Storage (`candor-files` bucket) — public
-- **AI:** SMART agent at smart.shopee.io — **Shopee internal network only**
-- **Auth:** Supabase Google OAuth — restricted to @shopee.com and @spxexpress.com
+## What it is
+
+Candor Research is an internal AI-powered user research tool built for Shopee. It lets anyone — product, ops, strategy, HR — run structured research conversations with the people who matter, without scheduling calls, taking notes, or doing manual synthesis.
+
+**Who it's for:**
+- **Product** — testing features with users before or after shipping
+- **Ops** — understanding why a process isn't being followed, or what's making a workflow harder than it should be
+- **Strategy** — sensing where pain is accumulating across markets before it shows up in data
+- **HR / People** — running structured listening sessions without holding 30 individual calls
 
 ---
 
-## Files
-| File | Purpose |
+## How it works
+
+1. **Admin creates a session** — defines the research topic, goal, duration, language, participant roles, and optionally uploads materials (screenshots, mockups, PDFs)
+2. **AI reviews the setup** — asks clarifying questions to sharpen the interview design
+3. **Admin publishes** — gets a 6-digit PIN and shareable link
+4. **Participants join** — open the link, enter their details and PIN, no app or account needed
+5. **AI conducts the interview** — one question at a time, adapting follow-up questions dynamically based on each response. Takes 7–10 minutes
+6. **Admin reviews findings** — transcripts appear in real time. One click generates an AI summary across all responses
+
+---
+
+## File structure
+
+```
+candor-research/
+├── index.html        # Admin portal — create sessions, view transcripts, generate summaries
+├── interview.html    # Participant interview page
+├── auth.js           # Google OAuth layer
+├── db.js             # Supabase database layer (sessions, participants, transcripts, scores)
+├── smart.js          # SMART AI API calls
+├── config.js         # Configuration — Supabase keys, SMART credentials, base URL (gitignored)
+├── config.example.js # Config template — copy this to config.js and fill in values
+├── proxy.js          # Local SMART proxy server (not committed — create locally)
+├── supabase_schema.sql
+└── README.md
+```
+
+---
+
+## Tech stack
+
+| Layer | Technology |
 |---|---|
-| `index.html` | Admin portal — create sessions, view transcripts, generate summaries |
-| `interview.html` | Participant interview page |
-| `config.js` | Credentials — **gitignored, never commit secrets** |
-| `auth.js` | Google OAuth layer |
-| `db.js` | Supabase data layer |
-| `smart.js` | SMART AI API calls |
-| `proxy.js` | Local CORS proxy — bridges GitHub Pages → SMART |
-| `supabase_schema.sql` | Initial database schema |
-| `supabase_migration.sql` | Round 1 schema migration |
-| `supabase_migration_r2.sql` | Round 2 schema migration |
+| Frontend | Vanilla HTML/CSS/JS — no framework |
+| Database | Supabase (Postgres + Storage) |
+| AI / LLM | Shopee SMART platform (Claude-based) |
+| Auth | Google OAuth via Supabase |
+| File storage | Supabase Storage (`candor-files` — private, `candor-public` — public) |
+| Hosting | GitHub Pages |
+| Proxy | Node.js local server + ngrok |
 
 ---
 
-## First-Time Setup
+## Architecture
 
-### 1. Supabase
-1. Create a project at [supabase.com](https://supabase.com)
-2. SQL Editor → paste `supabase_schema.sql` → Run
-3. SQL Editor → paste `supabase_migration.sql` → Run
-4. SQL Editor → paste `supabase_migration_r2.sql` → Run
-5. Storage → create bucket named `candor-files` → set to **Public**
-6. Storage → Policies → add INSERT policy allowing `anon` and `authenticated` roles
+```
+Participant browser
+       ↓
+interview.html (GitHub Pages)
+       ↓
+proxy.js (Node.js on dedicated laptop, exposed via ngrok)
+       ↓
+Shopee SMART API (smart.shopee.io) — requires Shopee WiFi / VPN
+       ↓
+LLM response back to participant
+```
 
-### 2. Config
-Edit `config.js` with your credentials:
+File uploads and session data go directly to Supabase — no proxy needed for those.
+
+---
+
+## Local setup
+
+### Prerequisites
+- Node.js (v18+)
+- A machine connected to Shopee WiFi or VPN (for SMART calls)
+- ngrok account (free tier sufficient)
+- Supabase project with the schema below
+
+### 1. Clone the repo
+```bash
+git clone https://github.com/chngclarence/candor-research.git
+cd candor-research
+```
+
+### 2. Create config.js
+Copy `config.example.js` to `config.js` and fill in your values:
 ```javascript
 const CONFIG = {
-  SUPABASE_URL: 'https://your-project.supabase.co',
-  SUPABASE_KEY: 'your-publishable-key',
-  SMART_URL: 'http://localhost:3333',   // update to laptop IP for demo
-  SMART_HASH_ID: 'your-hash-id',
-  SMART_KEY: 'your-smart-key',
-  BASE_URL: 'https://chngclarence.github.io/candor-research',
+  SUPABASE_URL:    'https://your-project.supabase.co',
+  SUPABASE_KEY:    'your-anon-key',
+  GOOGLE_CLIENT_ID: 'your-google-oauth-client-id',
+  SMART_URL:       'https://your-ngrok-url',
+  SMART_HASH_ID:   'your-smart-hash-id',
+  SMART_KEY:       'your-smart-key',
+  BASE_URL:        'https://chngclarence.github.io/candor-research',
+  ALLOWED_DOMAINS: ['shopee.com', 'spxexpress.com'],
 };
 ```
 
-### 3. Deploy to GitHub Pages
-1. Push all files to GitHub (**do not push** `config.js` with real credentials)
-2. Repo Settings → Pages → Source: **Deploy from branch** → Branch: **main** → Save
-3. Add `config.js` via GitHub UI (Add file → Create new file) with real credentials
-4. Pages rebuilds in ~2 minutes
+`config.js` is gitignored — never commit it.
 
----
-
-## Demo Setup (Multi-User on Shopee WiFi)
-
-> The SMART agent is on Shopee internal network. GitHub Pages cannot reach it directly.
-> A local proxy on your laptop bridges the gap.
-
-### Before the demo
-1. Connect your laptop to **Shopee office WiFi**
-2. Find your laptop's local IP:
-   ```bash
-   ipconfig getifaddr en0
-   # e.g. 192.168.1.42
-   ```
-3. Edit `config.js` — change `SMART_URL`:
-   ```javascript
-   SMART_URL: 'http://192.168.1.42:3333',
-   ```
-4. Update `config.js` in GitHub so all participant devices get the right proxy URL
-5. Start the proxy:
-   ```bash
-   node proxy.js
-   ```
-6. Verify the SMART status pill shows green in the admin portal
-
-### During the demo
-- All participant devices must be on the **same Shopee WiFi network**
-- Admin portal: open on your laptop (or any device on same network)
-- Participants: open their invite link on their own devices
-- Their AI requests route → your laptop IP → proxy → SMART ✓
-
-### After the demo
+### 3. Run the proxy
 ```bash
-Ctrl + C   # stop proxy immediately
+node proxy.js
 ```
-Revert `SMART_URL` back to `http://localhost:3333` in `config.js` and push to GitHub.
+
+In a second terminal tab:
+```bash
+ngrok http 3333
+```
+
+Copy the `https://xxx.ngrok-free.app` URL and paste it into `config.js` as `SMART_URL`.
+
+### 4. Keep it running permanently (dedicated proxy laptop)
+```bash
+npm install -g pm2
+pm2 start proxy.js
+pm2 start "ngrok http 3333" --name candor-ngrok
+pm2 save
+pm2 startup  # follow the printed command to auto-start on reboot
+```
 
 ---
 
-## Security & Risks
+## Supabase schema
 
-| Risk | Level | Notes |
+```sql
+-- Sessions
+CREATE TABLE sessions (
+  pin text PRIMARY KEY,
+  product text,
+  goal text,
+  persona text,
+  duration_mins integer DEFAULT 7,
+  focus text[],
+  total_questions integer,
+  language text DEFAULT 'English',
+  status text DEFAULT 'active',
+  file_ids text[],
+  custom_questions text,
+  context_url text,
+  interview_prompt text,
+  created_by text,
+  co_admins text[],
+  roles text[],
+  interviewer_name text DEFAULT 'Candor',
+  require_email boolean DEFAULT false,
+  response_count integer DEFAULT 0,
+  summary text,
+  summary_generated_at timestamptz,
+  summary_response_count integer,
+  created_at timestamptz DEFAULT now()
+);
+
+-- Participants
+CREATE TABLE participants (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  pin text REFERENCES sessions(pin),
+  name text,
+  email text,
+  role text,
+  language text,
+  market text,
+  transcript jsonb,
+  status text DEFAULT 'started',
+  experience_rating integer,
+  experience_comment text,
+  started_at timestamptz DEFAULT now(),
+  completed_at timestamptz
+);
+
+-- Snake leaderboard
+CREATE TABLE snake_scores (
+  email text PRIMARY KEY,
+  score integer NOT NULL,
+  achieved_at timestamptz DEFAULT now()
+);
+```
+
+---
+
+## Supabase storage buckets
+
+| Bucket | Visibility | Purpose |
 |---|---|---|
-| SMART credentials in public GitHub | Low | SMART requires Shopee network — credentials useless externally |
-| Supabase publishable key exposed | Very Low | Designed to be public — RLS policies are the real guard |
-| Laptop IP hardcoded in config.js | Medium | Manage manually — never leave real IP committed after demo |
-| Proxy has no authentication | Low | Anyone on same WiFi could call it — acceptable for internal demo |
-| Participant data in Supabase | Low | Internal staff only — confirm data residency for sensitive research |
+| `candor-files` | **Private** | User-uploaded materials (images, PDFs). Accessed via signed URLs (1hr expiry) |
+| `candor-public` | **Public** | Static assets — mascot images |
 
-**Key rules:**
-- Stop proxy immediately after every demo (`Ctrl+C`)
-- Never leave a real laptop IP committed to GitHub
-- Regenerate SMART keys periodically from the Integration tab
+Mascot images live at:
+`candor-public/mascot/mascot-happy.png`
+`candor-public/mascot/mascot-clipboard.png`
+`candor-public/mascot/mascot-surprised.png`
+
+---
+
+## Key features
+
+- **7 languages** — English, Bahasa Indonesia, Vietnamese, Thai, Filipino, Brazilian Portuguese, Mandarin
+- **Materials panel** — images zoom on click, PDFs render via Google Docs Viewer
+- **Voice input** — push-to-talk with live transcript, auto-sends on stop
+- **TTS** — AI reads questions aloud, female voice priority (Samantha → Karen → Google UK English Female), mute toggle
+- **Replay button** — hover any AI message to replay it
+- **Anonymous mode** — participants can opt out of name recording
+- **Email collection** — optional per-session toggle
+- **Focus areas** — Sentiment, Pain Points, Workflows, Motivations, Clarity, Trust, Unmet Needs, Decision Making
+- **AI summary** — synthesises all transcripts into structured findings
+- **Export** — full session export as `.md`
+- **Snake game** — hidden easter egg (click the otter logo), org leaderboard top 20
 
 ---
 
@@ -146,16 +254,43 @@ in the instructed language without commenting on it.
 
 ---
 
-## Easter Eggs
-- Click the **Candor logo 5 times rapidly** → Snake game 🐍
-- Publish a session → confetti + Candor the Otter 🦦
-- Dashboard milestone celebration on every 5th response ⭐
+## Deployment
+
+The frontend is served via **GitHub Pages** — push to `main` and it's live.
+
+```bash
+git add .
+git commit -m "your message"
+git push
+```
+
+The proxy runs separately on a dedicated laptop — not deployed to GitHub Pages.
 
 ---
 
-## Pending Enhancements
-| # | Feature | Notes |
-|---|---|---|
-| 20 | Voice chat (STT + TTS) | Web Speech API — nice to have |
-| 27 | Summary version history | Track regenerations over time |
-| 41 | Participant email / anonymity toggle | Optional email capture |
+## Security notes
+
+- `candor-files` bucket is **private** — all participant-uploaded files are served via signed URLs with 1-hour expiry
+- `config.js` is gitignored — never commit API keys
+- The SMART proxy only forwards POST requests — no other routes exposed
+- ngrok provides HTTPS termination — no mixed content browser warnings
+- Participant interviews are PIN-gated — sessions must be active to accept responses
+- Stop proxy immediately after every session (`Ctrl+C` or `pm2 stop all`)
+- Regenerate SMART keys periodically from the Integration tab
+
+---
+
+## Planned features (backlog)
+
+- Session permissions system (Owner / Editor / Viewer roles, Share modal)
+- Supabase Edge Function to replace laptop-based proxy (removes ngrok dependency)
+- HTML file upload support with sandboxed preview
+- Org-wide session sharing
+- Snake leaderboard scoped to org email domains
+
+---
+
+## Maintainer
+
+Clarence Chng — Shopee
+`clarence.chngkh@shopee.com`
