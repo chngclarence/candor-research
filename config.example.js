@@ -14,7 +14,7 @@ const CONFIG = {
 
   // SMART Agent — routes through local proxy to bypass CORS
   // Set SMART_URL to your ngrok URL when running proxy.js
-  SMART_URL:        'http://localhost:3333',
+  SMART_URL:        'http://10.22.74.15:3333',  // dedicated proxy laptop (candor-smart-proxy)
   SMART_HASH_ID:    'your-smart-hash-id',
   SMART_KEY:        'your-smart-key',
 
